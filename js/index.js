@@ -1,80 +1,50 @@
-// TODO for future
-// Refactor this all
-// Change pictures changing of preloading
+// TODO Refactor this all
+const WT_KEY = '20e6b4bb024441f12fe889046e1acbd6';
+const IP_URL = 'http://ip-api.com/json';
+const WT_URL = 'http://api.openweathermap.org/data/2.5/weather';
+const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
-
-
-// Location and API functions
-
-function getWeatherData(position, callback) {
-  var ask = '';
-  switch (position.type) {
+function makeDataCallUrl(locat) {
+  switch (locat.type) {
     case 'coords':
-      ask = 'http://api.openweathermap.org/data/2.5/weather?lat=' +
-            position.lati + '&lon=' + position.long +
-            '&appid=20e6b4bb024441f12fe889046e1acbd6';
-      break;
+      return `${WT_URL}?lat=${locat.lati}&lon=${locat.long}&appid=${WT_KEY}`;
     case 'ip':
-      ask = 'http://api.openweathermap.org/data/2.5/weather?zip=' +
-            position.zip + ',' + position.counCode +
-            '&appid=20e6b4bb024441f12fe889046e1acbd6';
-      break;
-    default:
-      break;
+      return `${WT_URL}?zip=${locat.zip},${locat.countryCode}&appid=${WT_KEY}`;
+    default: throw new Error(`Wrong type of location data: ${locat}`);
   }
-  $.getJSON(ask, function(weather) {
-    callback(weather);
-  }).fail(function() {
-    callback('weatherError');
+}
+
+function getWeatherData(location) {
+  return new Promise((resolve, reject) => {
+    $.getJSON(makeDataCallUrl(location), data => resolve(data))
+        .fail((j, errTxt) => reject(errTxt));
   });
 }
 
-function getLocation(callback) {
-  $.getJSON('http://ip-api.com/json', function(ipLocation) {
-    if (ipLocation.message === undefined) callback({
-      type: 'ip',
-      zip: ipLocation.zip,
-      counCode: ipLocation.countryCode
-    });
-    else callback({
-      type: 'error',
-      error: ipLocation.message
-    });
-  }).fail(function() {
-    callback({
-      type: 'fatalError'
-    });
+function getIpLocation() {
+  return new Promise((resolve, reject) => {
+    $.getJSON(IP_URL, location => {
+      if (!location.message) resolve(Object.assign({ type: 'ip' }, location));
+      else reject(Object.assign({ type: 'error' }, location));
+    }).fail((j, message) => { reject({ type: 'error', message }); });
   });
 }
 
-function getCoordsOrLocation(callback) {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      callback({
-        type: 'coords',
-        lati: position.coords.latitude,
-        long: position.coords.longitude
-      });
-    }, function() {
-      getLocation(callback);
+function getNavCoords() {
+  return new Promise(resolve => {
+    navigator.geolocation.getCurrentPosition(({ coords: c }) => {
+      resolve({ type: 'coords', lati: c.latitude, long: c.longitude });
+    }, () => {
+      resolve({ type: 'error', message: 'User canceled operation.' });
     });
-  } else getLocation(callback);
+  });
 }
-
-
-
-// Interface support functions
 
 function getWindDirection(degree) {
-  if (degree >= 0 && degree < 22.5 || degree >= 337.5 && degree < 360) return 'N';
-  else if (degree >= 22.5 && degree < 67.5) return 'NE';
-  else if (degree >= 67.5 && degree < 112.5) return 'E';
-  else if (degree >= 112.5 && degree < 157.5) return 'SE';
-  else if (degree >= 157.5 && degree < 202.5) return 'S';
-  else if (degree >= 202.5 && degree < 247.5) return 'SW';
-  else if (degree >= 247.5 && degree < 292.5) return 'W';
-  else return 'NW';
+  return CARDINAL[~~((degree + 22.5) / 45)] || CARDINAL[0];
 }
+
+// UNDONE
 
 function tempConvert(temp, isImperial) {
   return isImperial ? temp * 9 / 5 - 459.67 : temp - 273.15;
@@ -184,12 +154,12 @@ function weatherOut(weather, isImperial) {
 // Variables, initialization and buttons events
 
 $(document).ready(function() {
-  
+
   var weatherData = {};
   var isImperial = false;
   var refreshSpeed = 720000;
   var slideSpeed = 500;
-  
+
   // Simple images preloading
   var images = [];
   var imagesLinks = [
@@ -208,7 +178,7 @@ $(document).ready(function() {
 		images[i].src = imagesLinks[i];
   }
   // End
-  
+
   function refreshWeather() {
     getCoordsOrLocation(function(data) {
       if (data.type === 'fatalError')
@@ -226,25 +196,25 @@ $(document).ready(function() {
       });
     });
   }
-  
+
   refreshWeather();
   var getInfo = setInterval(function() {
     refreshWeather();
   }, refreshSpeed);
-  
+
   $('#changeUnits').on('click', function() {
     isImperial = !isImperial;
     weatherOut(weatherData, isImperial);
     $('#units-btn').text(isImperial ? 'metric' : 'imperial');
   });
-  
+
   $('#changeColor').on('click', function() {
     $('.main').toggleClass('dark');
     $('#color-btn').text($('.main').hasClass('dark') ? 'black' : 'white');
   });
-  
+
   $('#back-img').on('click', function() {
     $('.main, .back-grad').toggleClass('slideOut');
   });
-  
+
 });
