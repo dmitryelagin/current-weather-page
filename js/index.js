@@ -4,14 +4,31 @@ const IP_URL = 'http://ip-api.com/json';
 const WT_URL = 'http://api.openweathermap.org/data/2.5/weather';
 const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
-function makeDataCallUrl(locat) {
-  switch (locat.type) {
-    case 'coords':
-      return `${WT_URL}?lat=${locat.lati}&lon=${locat.long}&appid=${WT_KEY}`;
-    case 'ip':
-      return `${WT_URL}?zip=${locat.zip},${locat.countryCode}&appid=${WT_KEY}`;
-    default: throw new Error(`Wrong type of location data: ${locat}`);
+class OpenWeather {
+
+  constructor(apiKey) {
+    this.key = apiKey;
+    this.location = {};
   }
+
+  static get weatherUrl() {
+    return 'http://api.openweathermap.org/data/2.5/weather';
+  }
+
+  static get ipUrl() {
+    return 'http://ip-api.com/json';
+  }
+
+  getRequestWithCoords({ latitude, longitude }) {
+    return `${this.constructor.weatherUrl}?lat=${latitude}&lon=${longitude}` +
+        `&appid=${this.key}`;
+  }
+
+  getRequestWithIP({ zip, countryCode }) {
+    return `${this.constructor.weatherUrl}?zip=${zip},${countryCode}` +
+        `&appid=${this.key}`;
+  }
+
 }
 
 function getWeatherData(location) {
