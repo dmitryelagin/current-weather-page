@@ -1,21 +1,13 @@
-define(['jquery'], $ => (
-  // Class for openweathermap.org
-  class OpenWeatherMap {
+// TODO Apply singleton pattern
+define(['jquery'], $ => {
+  // Base class for work with weather API
+  class Weather {
 
-    constructor(apiKey) {
-      if (!apiKey) throw new Error('API key is required.');
-      this.key = apiKey;
+    constructor(ipServiceUrl = 'http://ip-api.com/json') {
+      this.ipServiceUrl = ipServiceUrl;
     }
 
-    static get weatherServiceUrl() {
-      return 'http://api.openweathermap.org/data/2.5/weather';
-    }
-
-    static get ipServiceUrl() {
-      return 'http://ip-api.com/json';
-    }
-
-    requestData(requestUrl) {
+    request(requestUrl) {
       return new Promise((resolve, reject) => {
         $.getJSON(requestUrl, data => { resolve(data); })
             .fail((j, status, error) => { reject(`${status}, ${error}`); });
@@ -35,27 +27,43 @@ define(['jquery'], $ => (
     }
 
     locate() {
-      return this.requestData(this.constructor.ipServiceUrl).then(data => {
+      return this.request(this.ipServiceUrl).then(data => {
         if (data.message) throw data.message;
         return { zip: data.zip, countryCode: data.countryCode };
       });
     }
 
+  }
+
+  // Class for openweathermap.org
+  class OpenWeatherMap extends Weather {
+
+    constructor(apiKey,
+        weatherServiceUrl = 'http://api.openweathermap.org/data/2.5/weather',
+        ipServiceUrl) {
+      if (!apiKey) throw new Error('API key is required.');
+      super(ipServiceUrl);
+      this.weatherServiceUrl = weatherServiceUrl;
+      this.key = apiKey;
+    }
+
     makeRequestUrlByCoords({ latitude, longitude }) {
-      return `${this.constructor.weatherServiceUrl}?` +
+      return `${this.weatherServiceUrl}?` +
           `lat=${latitude}&lon=${longitude}&appid=${this.key}`;
     }
 
     makeRequestUrlByLocation({ zip, countryCode }) {
-      return `${this.constructor.weatherServiceUrl}?` +
+      return `${this.weatherServiceUrl}?` +
           `zip=${zip},${countryCode}&appid=${this.key}`;
     }
 
-    request() {
+    requestData() {
       return this.coordinate().then(data => this.makeRequestUrlByCoords(data),
           () => this.locate().then(data => this.makeRequestUrlByLocation(data)))
-          .then(url => this.requestData(url));
+          .then(url => this.request(url));
     }
 
   }
-));
+
+  return { Weather, OpenWeatherMap };
+});

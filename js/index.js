@@ -1,61 +1,6 @@
 // TODO Refactor this all
-const WT_KEY = '20e6b4bb024441f12fe889046e1acbd6';
-const IP_URL = 'http://ip-api.com/json';
-const WT_URL = 'http://api.openweathermap.org/data/2.5/weather';
+const API_KEY = '20e6b4bb024441f12fe889046e1acbd6';
 const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-
-class OpenWeather {
-
-  constructor(apiKey) {
-    this.key = apiKey;
-    this.location = {};
-  }
-
-  static get weatherUrl() {
-    return 'http://api.openweathermap.org/data/2.5/weather';
-  }
-
-  static get ipUrl() {
-    return 'http://ip-api.com/json';
-  }
-
-  getRequestWithCoords({ latitude, longitude }) {
-    return `${this.constructor.weatherUrl}?lat=${latitude}&lon=${longitude}` +
-        `&appid=${this.key}`;
-  }
-
-  getRequestWithIP({ zip, countryCode }) {
-    return `${this.constructor.weatherUrl}?zip=${zip},${countryCode}` +
-        `&appid=${this.key}`;
-  }
-
-}
-
-function getWeatherData(location) {
-  return new Promise((resolve, reject) => {
-    $.getJSON(makeDataCallUrl(location), data => resolve(data))
-        .fail((j, errTxt) => reject(errTxt));
-  });
-}
-
-function getIpLocation() {
-  return new Promise((resolve, reject) => {
-    $.getJSON(IP_URL, location => {
-      if (!location.message) resolve(Object.assign({ type: 'ip' }, location));
-      else reject(Object.assign({ type: 'error' }, location));
-    }).fail((j, message) => { reject({ type: 'error', message }); });
-  });
-}
-
-function getNavCoords() {
-  return new Promise(resolve => {
-    navigator.geolocation.getCurrentPosition(({ coords: c }) => {
-      resolve({ type: 'coords', lati: c.latitude, long: c.longitude });
-    }, () => {
-      resolve({ type: 'error', message: 'User canceled operation.' });
-    });
-  });
-}
 
 function getWindDirection(degree) {
   return CARDINAL[~~((degree + 22.5) / 45)] || CARDINAL[0];
