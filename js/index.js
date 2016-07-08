@@ -1,22 +1,5 @@
 // TODO Refactor this all
 const API_KEY = '20e6b4bb024441f12fe889046e1acbd6';
-const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-
-function getWindDirection(degree) {
-  return CARDINAL[~~((degree + 22.5) / 45)] || CARDINAL[0];
-}
-
-// UNDONE
-
-function tempConvert(temp, isImperial) {
-  return isImperial ? temp * 9 / 5 - 459.67 : temp - 273.15;
-}
-
-function getTempSign(temp) {
-  if (temp > 0 && temp < 100) return '+';
-  else if (temp < 0 && temp > -100) return '−';
-  else return '';
-}
 
 function getTempDecimal(temp) {
   if (temp > -10 && temp < 10) {
@@ -25,16 +8,6 @@ function getTempDecimal(temp) {
     else return numStr.replace(/.*(\.\d)/, '$1');
   }
   else return '';
-}
-
-function getWindSpeed(speed, isImperial) {
-  if (isImperial) speed *= 2.23694;
-  return parseFloat(Number(speed).toFixed(speed < 100 && speed > -100 ? 1 : 0));
-}
-
-function formatTime(val) {
-  val += '';
-  return val.length < 2 ? '0' + val : val;
 }
 
 
