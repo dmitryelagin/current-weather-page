@@ -1,4 +1,5 @@
 // TODO Apply singleton pattern
+// TODO Add Proxy pattern functionality
 define(['jquery'], $ => {
   // Base class for work with weather API
   class Weather {
@@ -7,9 +8,9 @@ define(['jquery'], $ => {
       this.ipServiceUrl = ipServiceUrl;
     }
 
-    request(requestUrl) {
+    requestByUrl(url) {
       return new Promise((resolve, reject) => {
-        $.getJSON(requestUrl, data => { resolve(data); })
+        $.getJSON(url, data => { resolve(data); })
             .fail((j, status, error) => { reject(`${status}, ${error}`); });
       });
     }
@@ -27,7 +28,7 @@ define(['jquery'], $ => {
     }
 
     locate() {
-      return this.request(this.ipServiceUrl).then(data => {
+      return this.requestByUrl(this.ipServiceUrl).then(data => {
         if (data.message) throw data.message;
         return { zip: data.zip, countryCode: data.countryCode };
       });
@@ -40,7 +41,8 @@ define(['jquery'], $ => {
 
     constructor(apiKey,
         weatherServiceUrl = 'http://api.openweathermap.org/data/2.5/weather',
-        ipServiceUrl) {
+        ipServiceUrl
+    ) {
       if (!apiKey) throw new Error('API key is required.');
       super(ipServiceUrl);
       this.weatherServiceUrl = weatherServiceUrl;
@@ -60,7 +62,7 @@ define(['jquery'], $ => {
     requestData() {
       return this.coordinate().then(data => this.makeRequestUrlByCoords(data),
           () => this.locate().then(data => this.makeRequestUrlByLocation(data)))
-          .then(url => this.request(url));
+          .then(url => this.requestByUrl(url));
     }
 
   }

@@ -106,7 +106,7 @@ a:active {
   font-weight: 300;
 }
 
-.temperature .numbers.decimal {
+.temperature .numbers .decimal {
   font-weight: 400;
   font-size: 108px;
 }
@@ -165,7 +165,7 @@ a:active {
     color 0.3s linear,
     background-color 0.3s linear,
     border-color  0.3s linear;
-  /* Buttons will not selected */
+  /* Buttons will not be selected */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -195,12 +195,6 @@ a:active {
 .about {
   font-size: 14px;
   margin: 0;
-}
-
-.empty {
-  opacity: 0;
-  pointer-events: none;
-  position: fixed;
 }
 
 .slideOut {
@@ -249,44 +243,9 @@ a:active {
   color: #999;
 }
 
-/* Loading animation */
-@keyframes loading {
-  0% {
-    opacity: 0;
-  }
-  49% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.wait span {
-    animation-name: loading;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
-    animation-fill-mode: both;
-}
-
-.wait span:nth-child(2) {
-    animation-delay: 0.25s;
-}
-
-.wait span:nth-child(3) {
-    animation-delay: 0.5s;
-}
-
-.wait span:nth-child(4) {
-    animation-delay: 0.75s;
-}
-
 /* Backgrounds */
 #back-img {
-  background-size: cover;     
+  background-size: cover;
   background-attachment: fixed;
   background-position: center;
   cursor: pointer;
@@ -298,40 +257,4 @@ a:active {
   transition:
     background-image 0.3s linear,
     opacity 0.3s linear;
-}
-
-.clear-day {
-  background-image: url(http://cs633627.vk.me/v633627450/163f/fFK--dIxZlU.jpg);
-}
-
-.clear-night {
-  background-image: url(http://cs633627.vk.me/v633627450/162b/691NRSEyveI.jpg);
-}
-
-.cloudy-day {
-  background-image: url(http://cs633627.vk.me/v633627450/1653/S2h58MqOwR4.jpg);
-}
-
-.cloudy-night {
-  background-image: url(http://cs628729.vk.me/v628729450/22302/qjwznie_E_g.jpg);
-}
-
-.overcast {
-  background-image: url(http://cs627917.vk.me/v627917450/372f9/MQO8vGSrGVI.jpg);
-}
-
-.storm {
-  background-image: url(http://cs633627.vk.me/v633627450/1617/-MKNWboCDdM.jpg);
-}
-
-.precipitation {
-  background-image: url(http://cs633627.vk.me/v633627450/1667/Sv-o4MoA2zk.jpg);
-}
-
-.heavy-rain {
-  background-image: url(http://cs633627.vk.me/v633627450/160d/M557s8Wc9Rw.jpg);
-}
-
-.heavy-snow {
-  background-image: url(http://cs633627.vk.me/v633627450/165d/xQzi5fIF82U.jpg);
 }
