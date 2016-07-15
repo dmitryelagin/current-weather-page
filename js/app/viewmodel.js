@@ -4,8 +4,16 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
 
   const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
   const RESOURCES = {
-    units: [['metric', 'c', 'm/s'], ['imperial', 'f', 'mph']],
     dateFormat: ['dmy', 'ymd', 'mdy'],
+    units: [{
+      name: 'metric',
+      temp: { convert(val) { return val - 273.15; }, symbol: 'C' },
+      speed: { convert(val) { return val; }, symbol: 'm/s' },
+    }, {
+      name: 'imperial',
+      temp: { convert(val) { return val * 9 / 5 - 459.67; }, symbol: 'F' },
+      speed: { convert(val) { return val * 2.2369363; }, symbol: 'mph' },
+    }],
     backTone: ['dark', 'light'],
   };
 
@@ -18,9 +26,9 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
     const scrollArray = arr => arr.push(arr.shift());
 
     wvm.dt = ko.computed(() => new Date(wvm.measured()));
+
     wvm.time = ko.computed(() => (
         `${leadZero(wvm.dt().getHours())}:${leadZero(wvm.dt().getMinutes())}`));
-
     wvm.date = ko.computed(() => {
       const date = {
         d: leadZero(wvm.dt().getDate()),
@@ -32,33 +40,22 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
           .slice(0, -1);
     });
 
-    wvm.tempModified = ko.computed(() => {
-      switch (wvm.units()[0][0]) {
-        case 'metric': return wvm.temp() - 273.15;
-        case 'imperial': return wvm.temp() * 9 / 5 - 459.67;
-        default: return wvm.temp();
-      }
-    });
+    wvm.tempMod = ko.computed(() => wvm.units()[0].temp.convert(wvm.temp()));
+    wvm.tempUnit = ko.computed(() => wvm.units()[0].temp.symbol());
 
-    wvm.tempInt = ko.computed(() => ~~wvm.tempModified());
+    wvm.tempInt = ko.computed(() => ~~wvm.tempMod());
     wvm.tempFraction = ko.computed(() => (
-      wvm.tempModified().toFixed(wvm.tempFractionLen()).replace(/\d*\./, '.')));
-    wvm.tempUnit = ko.computed(() => wvm.units()[0][1].toUpperCase());
+        wvm.tempMod().toFixed(wvm.tempFractionLen()).replace(/\d*\./, '.')));
     wvm.tempSign = ko.computed(() => {
-      if (!wvm.tempModified()) return '';
-      return wvm.tempModified() > 0 ? '+' : '−';
+      if (!wvm.tempMod()) return '';
+      return wvm.tempMod() > 0 ? '+' : '−';
     });
 
-    wvm.speedModified = ko.computed(() => {
-      switch (wvm.units()[0][0]) {
-        case 'imperial': return wvm.speed() * 2.2369363;
-        default: return wvm.speed();
-      }
-    });
+    wvm.speedMod = ko.computed(() => wvm.units()[0].speed.convert(wvm.speed()));
+    wvm.speedUnit = ko.computed(() => wvm.units()[0].speed.symbol());
 
     wvm.speedVal = ko.computed(() => (
-        wvm.speedModified().toFixed(wvm.tempFractionLen())));
-    wvm.speedUnit = ko.computed(() => wvm.units()[0][2]);
+        wvm.speedMod().toFixed(wvm.tempFractionLen())));
     wvm.cardinal = ko.computed(() => (
         CARDINAL[~~((wvm.deg() + 22.5) / 45)] || CARDINAL[0]));
 
