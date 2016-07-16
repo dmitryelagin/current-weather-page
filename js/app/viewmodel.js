@@ -4,7 +4,7 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
 
   const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
   const RESOURCES = {
-    dateFormat: ['dmy', 'ymd', 'mdy'],
+    dateFormat: ['d.m.y', 'y-m-d', 'm/d/y'],
     units: [{
       name: 'metric',
       temp: { convert(val) { return val - 273.15; }, symbol: 'C' },
@@ -14,7 +14,7 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
       temp: { convert(val) { return val * 9 / 5 - 459.67; }, symbol: 'F' },
       speed: { convert(val) { return val * 2.2369363; }, symbol: 'mph' },
     }],
-    backTone: ['dark', 'light'],
+    colorScheme: ['dark', 'light', 'wood'],
   };
 
   return function WeatherViewModel(data,
@@ -35,19 +35,18 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
         m: leadZero(wvm.dt().getMonth() + 1),
         y: wvm.dt().getFullYear(),
       };
-      return Array.prototype.reduce
-          .call(wvm.dateFormat()[0], (str, part) => `${str}${date[part]}/`, '')
-          .slice(0, -1);
+      return Array.prototype.reduce.call(wvm.dateFormat()[0],
+          (str, part) => `${str}${date[part] || part}`, '');
     });
 
     wvm.tempMod = ko.computed(() => wvm.units()[0].temp.convert(wvm.temp()));
     wvm.tempUnit = ko.computed(() => wvm.units()[0].temp.symbol());
 
-    wvm.tempInt = ko.computed(() => ~~wvm.tempMod());
+    wvm.tempInt = ko.computed(() => `${~~wvm.tempMod()}`);
     wvm.tempFraction = ko.computed(() => (
         wvm.tempMod().toFixed(wvm.tempFractionLen()).replace(/\d*\./, '.')));
     wvm.tempSign = ko.computed(() => {
-      if (!wvm.tempMod()) return '';
+      if (!wvm.tempMod() || wvm.tempInt().length > 2) return '';
       return wvm.tempMod() > 0 ? '+' : '−';
     });
 
@@ -59,8 +58,11 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
     wvm.cardinal = ko.computed(() => (
         CARDINAL[~~((wvm.deg() + 22.5) / 45)] || CARDINAL[0]));
 
+    wvm.pageColorScheme = ko.computed(() => wvm.colorScheme()[0]);
+
     wvm.nextUnitSystem = () => { scrollArray(wvm.units); };
     wvm.nextDateFormat = () => { scrollArray(wvm.dateFormat); };
+    wvm.nextColorScheme = () => { scrollArray(wvm.colorScheme); };
 
     return wvm;
   };

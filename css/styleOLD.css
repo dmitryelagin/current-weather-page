@@ -1,0 +1,260 @@
+body {
+  background-color: #555;
+}
+
+p, a, h1 {
+  transition: color 0.3s linear;
+}
+
+h1, p {
+  color: #000;
+}
+
+p {
+  font-family: 'Roboto', sans-serif;
+}
+
+a, a:focus {
+  color: #222;
+  text-decoration: underline;
+}
+
+a:hover {
+  transition: none;
+  color: #444;
+}
+
+a:active {
+  transition: none;
+  color: #666;
+}
+
+.main, .back-grad {
+  width: 480px;
+  transition:
+    left 0.3s ease,
+    opacity 0.3s linear,
+    background-color 0.3s linear;
+}
+
+.main {
+  position: absolute;
+  left: 0;
+  z-index: 100;
+  padding: 40px;
+}
+
+.back-grad {
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  top: 0;
+  height: 100%;
+  opacity: 0.6;
+  background-color: #fff;
+}
+
+.separator {
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  transition: background-color 0.3s linear;
+}
+
+.logo {
+  font-family: 'Amita', cursive;
+  font-size: 54px;
+  color: #f66;
+  margin: -8px -12px 4px -12px;
+  text-align: center;
+}
+
+#info {
+  transition: opacity 0.3s linear;
+}
+
+.where, .when, .wait {
+  font-size: 18px;
+  margin: 0;
+}
+
+.wait {
+  position: absolute;
+  transition: opacity 0.3s linear;
+}
+
+.where {
+  font-size: 18px;
+  text-align: left;
+}
+
+.when {
+  text-align: right;
+}
+
+.temperature {
+  margin-top: -14px;
+  font-weight: 100;
+  font-size: 200px;
+  line-height: 200px;
+  text-align: right;
+}
+
+.temperature .numbers {
+  font-weight: 300;
+}
+
+.temperature .numbers.decimal {
+  font-weight: 400;
+  font-size: 108px;
+}
+
+.temperature .degree {
+  font-weight: 300;
+  font-size: 90px;
+  margin: 0 0 0 -68px;
+}
+
+.additional {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.additional.big {
+  margin-top: -36px;
+  margin-bottom: 30px;
+}
+
+.icon {
+  text-align: left;
+  fill: #fff;
+  width: 160px;
+  height: 160px;
+  transition: fill 0.3s linear;
+}
+
+.hidden {
+  display: none;
+}
+
+.wind {
+  text-align: right;
+  font-weight: 300;
+  padding-top: 20px;
+  line-height: 60px;
+  font-size: 50px;
+  margin: -4px 0 0 0;
+}
+
+.direction {
+  font-size: 110px;
+  line-height: 70px;
+}
+
+.button {
+  font-size: 16px;
+  border: 3px solid #000;
+  border-radius: 100px;
+  margin: 24px 0 0 0;
+  padding: 8px 16px 8px 16px;
+  cursor: pointer;
+  transition:
+    color 0.3s linear,
+    background-color 0.3s linear,
+    border-color  0.3s linear;
+  /* Buttons will not be selected */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* End */
+}
+
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+  transition: none;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.about {
+  font-size: 14px;
+  margin: 0;
+}
+
+.slideOut {
+  left: -480px;
+}
+
+/* Dark styles */
+.dark p {
+  color: #fff;
+}
+
+.dark a, .dark a:focus {
+  color: #ddd;
+}
+
+.dark svg {
+  fill: #fff;
+}
+
+.dark .separator {
+  background-color: #fff;
+}
+
+.dark .button {
+  border-color: #fff;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.dark .button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .button:active {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark.main + .back-grad {
+  background-color: #000;
+}
+
+.dark a:hover {
+  color: #bbb;
+}
+
+.dark a:active {
+  color: #999;
+}
+
+/* Backgrounds */
+#back-img {
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  cursor: pointer;
+  left: -1px;
+  top: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  position: fixed;
+  transition:
+    background-image 0.3s linear,
+    opacity 0.3s linear;
+}

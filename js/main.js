@@ -52,14 +52,14 @@ require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], ($, ko,
       }],
       base: 'cmc stations',
       main: {
-        temp: 293.25,
+        temp: 321.55,
         pressure: 1019,
         humidity: 83,
         temp_min: 289.82,
         temp_max: 295.37,
       },
       wind: {
-        speed: 5.1,
+        speed: 65.1,
         deg: 150,
       },
       clouds: {

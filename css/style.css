@@ -1,260 +1,152 @@
 body {
-  background-color: #555;
-}
-
-p, a, h1 {
-  transition: color 0.3s linear;
+  background-color: #888;
+  text-align: left;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
 }
 
 h1, p {
-  color: #000;
-}
-
-p {
-  font-family: 'Roboto', sans-serif;
-}
-
-a, a:focus {
-  color: #222;
-  text-decoration: underline;
-}
-
-a:hover {
-  transition: none;
-  color: #444;
-}
-
-a:active {
-  transition: none;
-  color: #666;
-}
-
-.main, .back-grad {
-  width: 480px;
-  transition:
-    left 0.3s ease,
-    opacity 0.3s linear,
-    background-color 0.3s linear;
-}
-
-.main {
-  position: absolute;
-  left: 0;
-  z-index: 100;
-  padding: 40px;
-}
-
-.back-grad {
-  position: fixed;
-  z-index: 50;
-  left: 0;
-  top: 0;
-  height: 100%;
-  opacity: 0.6;
-  background-color: #fff;
-}
-
-.separator {
-  width: 100%;
-  height: 2px;
-  background-color: #000;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  transition: background-color 0.3s linear;
-}
-
-.logo {
-  font-family: 'Amita', cursive;
-  font-size: 54px;
-  color: #f66;
-  margin: -8px -12px 4px -12px;
-  text-align: center;
-}
-
-#info {
-  transition: opacity 0.3s linear;
-}
-
-.where, .when, .wait {
-  font-size: 18px;
   margin: 0;
 }
 
-.wait {
+button {
+  background: none;
+  border: 2px solid;
+  border-radius: 100px;
+  padding: 10px 20px 12px 20px;
+}
+
+.weather-panel, .logo {
   position: absolute;
-  transition: opacity 0.3s linear;
+  left: 0;
+  top: 0;
+  width: 500px;
+  padding: 20px 40px 20px 40px;
 }
 
-.where {
-  font-size: 18px;
+.weather-panel {
+  height: 100%;
+  z-index: 0;
+}
+
+.logo, .logo-blank {
   text-align: left;
+  font-family: 'Amita', cursive;
+  font-weight: 700;
+  font-size: 60px;
+  margin: 0 0 -24px -3px;
 }
 
-.when {
-  text-align: right;
+.logo {
+  z-index: 10;
 }
 
-.temperature {
-  margin-top: -14px;
-  font-weight: 100;
-  font-size: 200px;
-  line-height: 200px;
-  text-align: right;
-}
-
-.temperature .numbers {
-  font-weight: 300;
-}
-
-.temperature .numbers .decimal {
-  font-weight: 400;
-  font-size: 108px;
-}
-
-.temperature .degree {
-  font-weight: 300;
-  font-size: 90px;
-  margin: 0 0 0 -68px;
-}
-
-.additional {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-}
-
-.additional.big {
-  margin-top: -36px;
-  margin-bottom: 30px;
+.logo-blank {
+  visibility: hidden;
 }
 
 .icon {
-  text-align: left;
-  fill: #000;
-  width: 160px;
-  height: 160px;
-  transition: fill 0.3s linear;
+  width: 200px;
+  height: 200px;
+}
+
+.data-row {
+  display: flex;
+  width: 100%;
+}
+
+.data-row > * {
+  margin-right: 48px;
+}
+
+.data-row :last-child {
+  margin-right: 0;
+}
+
+.medium {
+  font-size: 24px;
+}
+
+.tall {
+  font-size: 80px;
+}
+
+.tallest {
+  font-size: 200px;
+}
+
+.thin {
+  font-weight: 100;
+}
+
+.active {
+  display: block;
 }
 
 .hidden {
   display: none;
 }
 
-.wind {
-  text-align: right;
-  font-weight: 300;
-  padding-top: 20px;
-  line-height: 60px;
-  font-size: 50px;
-  margin: -4px 0 0 0;
-}
-
-.direction {
-  font-size: 110px;
-  line-height: 70px;
-}
-
-.button {
-  font-size: 16px;
-  border: 3px solid #000;
-  border-radius: 100px;
-  margin: 24px 0 0 0;
-  padding: 8px 16px 8px 16px;
-  cursor: pointer;
-  transition:
-    color 0.3s linear,
-    background-color 0.3s linear,
-    border-color  0.3s linear;
-  /* Buttons will not be selected */
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  /* End */
-}
-
-.button:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.button:active {
-  transition: none;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.left {
-  float: left;
-}
-
-.right {
-  float: right;
-}
-
-.about {
-  font-size: 14px;
-  margin: 0;
-}
-
-.slideOut {
-  left: -480px;
-}
-
-/* Dark styles */
-.dark p {
+/* Dark color scheme */
+.dark .weather-panel {
   color: #fff;
-}
-
-.dark a, .dark a:focus {
-  color: #ddd;
-}
-
-.dark svg {
+  background-color: #222;
+  background-color: rgba(0, 0, 0, 0.6);
   fill: #fff;
 }
 
-.dark .separator {
-  background-color: #fff;
+.dark .secondary {
+  color: #888;
 }
 
-.dark .button {
+.dark button {
+  color: #fff;
   border-color: #fff;
-  background-color: rgba(255, 255, 255, 0);
 }
 
-.dark .button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.dark .logo {
+  color: #f66;
 }
 
-.dark .button:active {
-  background-color: rgba(255, 255, 255, 0.5);
+/* Light color scheme */
+.light .weather-panel {
+  color: #000;
+  background-color: #ddd;
+  background-color: rgba(255, 255, 255, 0.6);
+  fill: #000;
 }
 
-.dark.main + .back-grad {
-  background-color: #000;
+.light .secondary {
+  color: #666;
 }
 
-.dark a:hover {
-  color: #bbb;
+.light button {
+  color: #000;
+  border-color: #000;
 }
 
-.dark a:active {
-  color: #999;
+.light .logo {
+  color: #f66;
 }
 
-/* Backgrounds */
-#back-img {
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-  cursor: pointer;
-  left: -1px;
-  top: -1px;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  position: fixed;
-  transition:
-    background-image 0.3s linear,
-    opacity 0.3s linear;
+/* Wood color scheme */
+.wood .weather-panel {
+  color: #cc8;
+  background-color: #422;
+  background-color: rgba(40, 20, 20, 0.6);
+  fill: #cc8;
+}
+
+.wood .secondary {
+  color: #cc8;
+}
+
+.wood button {
+  color: #cc8;
+  border-color: #cc8;
+}
+
+.wood .logo {
+  color: #6c6;
 }
