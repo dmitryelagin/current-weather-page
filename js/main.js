@@ -1,3 +1,5 @@
+// TODO Rework assets object
+const apiKey = '20e6b4bb024441f12fe889046e1acbd6';
 const assetsCfg = {
   id: [
     ['01d'], ['01n'], ['02d'], ['02n'],
@@ -30,7 +32,6 @@ const amdCfg = {
 require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], ($, ko,
     { OpenWeatherMap }, WeatherViewModel
 ) => {
-  const apiKey = '20e6b4bb024441f12fe889046e1acbd6';
   const weatherService = new OpenWeatherMap(apiKey);
   let weatherViewModel = {};
 

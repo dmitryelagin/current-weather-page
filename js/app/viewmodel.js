@@ -1,3 +1,4 @@
+// TODO Test background subscribtion
 define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
     { images: imgLoader }
 ) => {
@@ -33,7 +34,7 @@ define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
     };
     const scrollArray = arr => arr.push(arr.shift());
 
-    // Setting date and time
+    // Compute date and time
     wvm.dt = ko.computed(() => new Date(wvm.measured()));
     wvm.time = ko.computed(() => (
         `${leadZero(wvm.dt().getHours())}:${leadZero(wvm.dt().getMinutes())}`));
@@ -47,7 +48,7 @@ define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
           (str, part) => `${str}${date[part] || part}`, '');
     });
 
-    // Setting temperature
+    // Compute temperature
     wvm.tempMod = ko.computed(() => wvm.units()[0].temp.convert(wvm.temp()));
     wvm.tempUnit = ko.computed(() => wvm.units()[0].temp.symbol());
 
@@ -59,7 +60,7 @@ define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
       return wvm.tempMod() > 0 ? '+' : '−';
     });
 
-    // Setting wind
+    // Compute wind
     wvm.speedMod = ko.computed(() => wvm.units()[0].speed.convert(wvm.speed()));
     wvm.speedUnit = ko.computed(() => wvm.units()[0].speed.symbol());
 
@@ -68,14 +69,14 @@ define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
     wvm.cardinal = ko.computed(() => (
         CARDINAL[~~((wvm.deg() + 22.5) / 45)] || CARDINAL[0]));
 
-    // Setting visuals
+    // Compute visuals
     wvm.pageColorScheme = ko.computed(() => wvm.colorScheme()[0]);
 
     wvm.background = ko.observable('');
     wvm.icon.subscribe(setBackground);
     setBackground();
 
-    // Setting buttons
+    // Set buttons
     wvm.nextUnitSystem = () => { scrollArray(wvm.units); };
     wvm.nextDateFormat = () => { scrollArray(wvm.dateFormat); };
     wvm.nextColorScheme = () => { scrollArray(wvm.colorScheme); };
