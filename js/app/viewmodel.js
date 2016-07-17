@@ -1,10 +1,11 @@
-define(['knockout', 'mapping'], (knockout, mapping) => {
+define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
+    { images: imgLoader }
+) => {
   const ko = knockout;
   ko.mapping = mapping;
 
   const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  const RESOURCES = {
-    dateFormat: ['d.m.y', 'y-m-d', 'm/d/y'],
+  const config = {
     units: [{
       name: 'metric',
       temp: { convert(val) { return val - 273.15; }, symbol: 'C' },
@@ -14,19 +15,26 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
       temp: { convert(val) { return val * 9 / 5 - 459.67; }, symbol: 'F' },
       speed: { convert(val) { return val * 2.2369363; }, symbol: 'mph' },
     }],
-    colorScheme: ['dark', 'light', 'wood'],
+    dateFormat: ['d.m.y', 'y-m-d', 'm/d/y'],
+    colorScheme: ['dark', 'light', 'color'],
+    tempFractionLen: 1,
+    numFixedLen: 2,
   };
 
-  return function WeatherViewModel(data,
-      cfg = { tempFractionLen: 1, numFixedLen: 2 }
-  ) {
-    const wvm = ko.mapping.fromJS(Object.assign({}, data, cfg, RESOURCES));
+  return function WeatherViewModel(data, assets, cfg = config) {
+    const wvm = ko.mapping.fromJS(Object.assign({}, data, cfg));
+
+    // Support functions
     const leadZero = value => (
         `${'0'.repeat(wvm.numFixedLen())}${value}`.slice(-wvm.numFixedLen()));
+    const setBackground = () => {
+      const id = assets.id.findIndex(codes => codes.includes(wvm.icon()));
+      imgLoader.load(assets.url[id]).then(img => { wvm.background(img.src); });
+    };
     const scrollArray = arr => arr.push(arr.shift());
 
+    // Setting date and time
     wvm.dt = ko.computed(() => new Date(wvm.measured()));
-
     wvm.time = ko.computed(() => (
         `${leadZero(wvm.dt().getHours())}:${leadZero(wvm.dt().getMinutes())}`));
     wvm.date = ko.computed(() => {
@@ -39,6 +47,7 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
           (str, part) => `${str}${date[part] || part}`, '');
     });
 
+    // Setting temperature
     wvm.tempMod = ko.computed(() => wvm.units()[0].temp.convert(wvm.temp()));
     wvm.tempUnit = ko.computed(() => wvm.units()[0].temp.symbol());
 
@@ -50,6 +59,7 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
       return wvm.tempMod() > 0 ? '+' : '−';
     });
 
+    // Setting wind
     wvm.speedMod = ko.computed(() => wvm.units()[0].speed.convert(wvm.speed()));
     wvm.speedUnit = ko.computed(() => wvm.units()[0].speed.symbol());
 
@@ -58,8 +68,14 @@ define(['knockout', 'mapping'], (knockout, mapping) => {
     wvm.cardinal = ko.computed(() => (
         CARDINAL[~~((wvm.deg() + 22.5) / 45)] || CARDINAL[0]));
 
+    // Setting visuals
     wvm.pageColorScheme = ko.computed(() => wvm.colorScheme()[0]);
 
+    wvm.background = ko.observable('');
+    wvm.icon.subscribe(setBackground);
+    setBackground();
+
+    // Setting buttons
     wvm.nextUnitSystem = () => { scrollArray(wvm.units); };
     wvm.nextDateFormat = () => { scrollArray(wvm.dateFormat); };
     wvm.nextColorScheme = () => { scrollArray(wvm.colorScheme); };

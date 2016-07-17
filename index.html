@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Now the weather</title>
+  <script data-main="js/main" src="js/lib/require.js"></script>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amita:700|Roboto:100,300">
@@ -41,8 +42,7 @@
     <br><br>
     <p class="secondary">Information is automatically refreshing every twelve minutes. Service is using data from <a href="http://openweathermap.org/">openweathermap.org</a> and <a href="http://ip-api.com/">ip-api.com</a>. All icons are made by <a href="http://www.alessioatzeni.com/meteocons/">Alessio Atzeni</a> and free for use. This is a study project made by Dmitry Elagin for <a href="http://www.freecodecamp.com/">Free Code Camp</a>.</p>
   </div>
-  <img class="background"/>
-  <script data-main="js/main" src="js/lib/require.js"></script>
+  <img data-bind="style: { backgroundImage: 'url(\'' + background() + '\')' }" class="background"/>
 </body>
 
 </html>

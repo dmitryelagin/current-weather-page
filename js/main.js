@@ -1,10 +1,10 @@
 const assetsCfg = {
-  codes: [
+  id: [
     ['01d'], ['01n'], ['02d'], ['02n'],
     ['03d', '03n', '04d', '04n', '50d', '50n'],
     ['10d', '10n'], ['09d', '09n'], ['13d', '13n'], ['11d', '11n'],
   ],
-  links: [
+  url: [
     'http://cs633627.vk.me/v633627450/163f/fFK--dIxZlU.jpg',
     'http://cs633627.vk.me/v633627450/162b/691NRSEyveI.jpg',
     'http://cs633627.vk.me/v633627450/1653/S2h58MqOwR4.jpg',
@@ -48,7 +48,7 @@ require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], ($, ko,
         id: 803,
         main: 'Clouds',
         description: 'broken clouds',
-        icon: '04n',
+        icon: '01d',
       }],
       base: 'cmc stations',
       main: {
@@ -86,7 +86,7 @@ require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], ($, ko,
   }
 
   getWeatherData().then(data => {
-    weatherViewModel = new WeatherViewModel(data);
+    weatherViewModel = new WeatherViewModel(data, assetsCfg);
     ko.applyBindings(weatherViewModel);
   });
 });
