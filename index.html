@@ -10,11 +10,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amita:700|Roboto:100,300">
 </head>
 
-<body data-bind="attr: { class: pageColorScheme }">
+<body data-bind="attr: { class: colorScheme }">
   <h1 class="logo">Now the weather</h1>
   <div class="weather-panel">
     <h1 class="logo-blank">0</h1>
-    <p class="medium">in <span data-bind="text: city">City</span>, <span data-bind="text: country">C</span>; at <span data-bind="text: time">00:00</span>, <span data-bind="text: date">01.01.1970</span></p>
+    <p class="medium">in <span data-bind="text: city">City</span>, <span data-bind="text: country">C</span>; at <span data-bind="text: date">00:00, 01.01.1970</span></p>
     <p class="tall"><span class="tallest"><span data-bind="text: tempSign" class="thin">+</span><span data-bind="text: tempInt">1</span></span><span data-bind="text: tempFraction">.0</span>°<span data-bind="text: tempUnit">C</span></p>
     <div class="data-row">
       <svg class="icon" viewbox="0 0 512 512">
@@ -40,7 +40,7 @@
       <button data-bind="click: nextColorScheme">Change<br>color scheme</button>
     </div>
     <br><br>
-    <p class="secondary">Information is automatically refreshing every twelve minutes. Service is using data from <a href="http://openweathermap.org/">openweathermap.org</a> and <a href="http://ip-api.com/">ip-api.com</a>. All icons are made by <a href="http://www.alessioatzeni.com/meteocons/">Alessio Atzeni</a> and free for use. This is a study project made by Dmitry Elagin for <a href="http://www.freecodecamp.com/">Free Code Camp</a>.</p>
+    <p class="secondary">Information is automatically refreshing every twelve minutes. Service is using data from <a href="http://openweathermap.org/">openweathermap.org</a> and <a href="http://ip-api.com/">ip-api.com</a>. All icons are made by <a href="http://www.alessioatzeni.com/meteocons/">Alessio Atzeni</a> and free for use. This is a study project made by Dmitry Elagin for <a href="http://www.freecodecamp.com/">Free Code Camp</a>. Page is using cookies only to store its settings.</p>
   </div>
   <img data-bind="style: { backgroundImage: 'url(\'' + background() + '\')' }" class="background"/>
 </body>

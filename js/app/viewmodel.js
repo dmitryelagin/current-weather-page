@@ -1,12 +1,12 @@
 // TODO Test background subscribtion
-define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
-    { images: imgLoader }
+// TODO Make icon changing
+define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
+    knockout, mapping, Cookie, { images: loader }, format
 ) => {
   const ko = knockout;
   ko.mapping = mapping;
 
-  const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-  const config = {
+  const resources = {
     units: [{
       name: 'metric',
       temp: { convert(val) { return val - 273.15; }, symbol: 'C' },
@@ -16,70 +16,72 @@ define(['knockout', 'mapping', 'app/assets'], (knockout, mapping,
       temp: { convert(val) { return val * 9 / 5 - 459.67; }, symbol: 'F' },
       speed: { convert(val) { return val * 2.2369363; }, symbol: 'mph' },
     }],
-    dateFormat: ['d.m.y', 'y-m-d', 'm/d/y'],
-    colorScheme: ['dark', 'light', 'color'],
-    tempFractionLen: 1,
-    numFixedLen: 2,
+    dateFormat: ['HH:mm, DD.MM.Y', 'HH:mm, Y-MM-DD', 'h:mm P, M/D/Y'],
   };
 
-  return function WeatherViewModel(data, assets, cfg = config) {
-    const wvm = ko.mapping.fromJS(Object.assign({}, data, cfg));
+  // View model constructor
+  return function WeatherViewModel(data, assets, colors,
+      defaults = { units: 0, dateFormat: 0, colors: 0 },
+      cfg = { tempFractionLen: 1, numFixedLen: 2, cookieDays: 3 }
+  ) {
+    if (colors) resources.colors = colors;
+
+    const wvm = ko.mapping.fromJS(Object.assign({}, data, cfg, resources), {
+      units: { create: options => options.data },
+    });
 
     // Support functions
-    const leadZero = value => (
-        `${'0'.repeat(wvm.numFixedLen())}${value}`.slice(-wvm.numFixedLen()));
-    const setBackground = () => {
-      const id = assets.id.findIndex(codes => codes.includes(wvm.icon()));
-      imgLoader.load(assets.url[id]).then(img => { wvm.background(img.src); });
+    const scrollArray = name => { wvm[name].push(wvm[name].shift()); };
+    const changeOnPress = name => {
+      scrollArray(name);
+      Cookie.set(name, resources[name].findIndex(v => v === wvm[name]()[0]),
+          { expires: cfg.cookieDays });
     };
-    const scrollArray = arr => arr.push(arr.shift());
+    const setBackground = () => {
+      loader.load(assets.getUrl(wvm.icon(), wvm.temp(), wvm.dt())).then(img => {
+        wvm.background(img.src);
+      });
+    };
+
+    // Applying defaults
+    Object.keys(defaults).forEach(prop => {
+      for (let i = +Cookie.get(prop) || +defaults[prop] || 0; i--;) {
+        scrollArray(prop);
+      }
+    });
 
     // Compute date and time
-    wvm.dt = ko.computed(() => new Date(wvm.measured()));
-    wvm.time = ko.computed(() => (
-        `${leadZero(wvm.dt().getHours())}:${leadZero(wvm.dt().getMinutes())}`));
-    wvm.date = ko.computed(() => {
-      const date = {
-        d: leadZero(wvm.dt().getDate()),
-        m: leadZero(wvm.dt().getMonth() + 1),
-        y: wvm.dt().getFullYear(),
-      };
-      return Array.prototype.reduce.call(wvm.dateFormat()[0],
-          (str, part) => `${str}${date[part] || part}`, '');
-    });
+    wvm.date = ko.computed(() => (
+        format.date(new Date(wvm.dt()), wvm.dateFormat()[0])));
 
     // Compute temperature
     wvm.tempMod = ko.computed(() => wvm.units()[0].temp.convert(wvm.temp()));
-    wvm.tempUnit = ko.computed(() => wvm.units()[0].temp.symbol());
-
+    wvm.tempUnit = ko.computed(() => wvm.units()[0].temp.symbol);
     wvm.tempInt = ko.computed(() => `${~~wvm.tempMod()}`);
     wvm.tempFraction = ko.computed(() => (
         wvm.tempMod().toFixed(wvm.tempFractionLen()).replace(/\d*\./, '.')));
-    wvm.tempSign = ko.computed(() => {
-      if (!wvm.tempMod() || wvm.tempInt().length > 2) return '';
-      return wvm.tempMod() > 0 ? '+' : '−';
-    });
+    wvm.tempSign = ko.computed(() => (
+        wvm.tempInt().length > 2 ? '' : format.numSignStr(wvm.tempMod())));
 
     // Compute wind
     wvm.speedMod = ko.computed(() => wvm.units()[0].speed.convert(wvm.speed()));
-    wvm.speedUnit = ko.computed(() => wvm.units()[0].speed.symbol());
-
+    wvm.speedUnit = ko.computed(() => wvm.units()[0].speed.symbol);
     wvm.speedVal = ko.computed(() => (
         wvm.speedMod().toFixed(wvm.tempFractionLen())));
-    wvm.cardinal = ko.computed(() => (
-        CARDINAL[~~((wvm.deg() + 22.5) / 45)] || CARDINAL[0]));
+    wvm.cardinal = ko.computed(() => format.cardinalDir(wvm.deg()));
 
-    // Compute visuals
-    wvm.pageColorScheme = ko.computed(() => wvm.colorScheme()[0]);
-
+    // Visuals
     wvm.background = ko.observable('');
-    wvm.icon.subscribe(setBackground);
-    setBackground();
+    if (wvm.colors) wvm.colorScheme = ko.computed(() => wvm.colors()[0]);
+    if (assets) {
+      wvm.icon.subscribe(setBackground);
+      setBackground();
+    }
 
-    // Set buttons
-    wvm.nextUnitSystem = () => { scrollArray(wvm.units); };
-    wvm.nextDateFormat = () => { scrollArray(wvm.dateFormat); };
-    wvm.nextColorScheme = () => { scrollArray(wvm.colorScheme); };
+    // Buttons
+    wvm.nextUnitSystem = () => { changeOnPress('units'); };
+    wvm.nextDateFormat = () => { changeOnPress('dateFormat'); };
+    wvm.nextColorScheme = () => { changeOnPress('colors'); };
 
     return wvm;
   };

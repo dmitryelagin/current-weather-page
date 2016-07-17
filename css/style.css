@@ -6,7 +6,7 @@ body {
   font-size: 16px;
 }
 
-h1, p {
+h1, a, p {
   margin: 0;
 }
 
@@ -16,6 +16,10 @@ button {
   border-radius: 100px;
   padding: 10px 20px 12px 20px;
   cursor: pointer;
+}
+
+button:focus {
+  outline: 0;
 }
 
 .weather-panel, .logo {
@@ -103,7 +107,7 @@ button {
   z-index: 0;
 }
 
-/* Dark color scheme */
+/* Dark scheme */
 .dark .weather-panel {
   color: #fff;
   background-color: #333;
@@ -120,15 +124,25 @@ button {
   border-color: #fff;
 }
 
-.dark .logo {
+.dark button:focus {
+  background-color: #444;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark button:hover {
+  background-color: #555;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .logo, .dark a {
   color: #f66;
 }
 
-/* Light color scheme */
+/* Light scheme */
 .light .weather-panel {
   color: #000;
   background-color: #ddd;
-  background-color: rgba(240, 240, 240, 0.7);
+  background-color: rgba(230, 230, 230, 0.7);
   fill: #000;
 }
 
@@ -141,16 +155,26 @@ button {
   border-color: #000;
 }
 
-.light .logo {
-  color: #f66;
+.light button:focus {
+  background-color: #ccc;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Wood color scheme */
+.light button:hover {
+  background-color: #bbb;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.light .logo, .light a {
+  color: #d44;
+}
+
+/* Color scheme */
 .color .weather-panel {
-  color: #fa4;
+  color: #fb4;
   background-color: #422;
   background-color: rgba(40, 20, 60, 0.8);
-  fill: #fa4;
+  fill: #fb4;
 }
 
 .color .secondary {
@@ -162,6 +186,16 @@ button {
   border-color: #fa4;
 }
 
-.color .logo {
-  color: #4f8;
+.color button:focus {
+  background-color: #533;
+  background-color: rgba(255, 220, 60, 0.1);
+}
+
+.color button:hover {
+  background-color: #644;
+  background-color: rgba(255, 220, 60, 0.2);
+}
+
+.color .logo, .color a {
+  color: #2e6;
 }

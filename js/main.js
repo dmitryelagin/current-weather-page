@@ -1,22 +1,21 @@
-// TODO Rework assets object
 const apiKey = '20e6b4bb024441f12fe889046e1acbd6';
-const assetsCfg = {
-  id: [
-    ['01d'], ['01n'], ['02d'], ['02n'],
-    ['03d', '03n', '04d', '04n', '50d', '50n'],
-    ['10d', '10n'], ['09d', '09n'], ['13d', '13n'], ['11d', '11n'],
-  ],
+
+const assets = {
   url: [
-    'http://cs633627.vk.me/v633627450/163f/fFK--dIxZlU.jpg',
-    'http://cs633627.vk.me/v633627450/162b/691NRSEyveI.jpg',
-    'http://cs633627.vk.me/v633627450/1653/S2h58MqOwR4.jpg',
-    'http://cs628729.vk.me/v628729450/22302/qjwznie_E_g.jpg',
-    'http://cs627917.vk.me/v627917450/372f9/MQO8vGSrGVI.jpg',
-    'http://cs633627.vk.me/v633627450/1617/-MKNWboCDdM.jpg',
-    'http://cs633627.vk.me/v633627450/1667/Sv-o4MoA2zk.jpg',
-    'http://cs633627.vk.me/v633627450/160d/M557s8Wc9Rw.jpg',
-    'http://cs633627.vk.me/v633627450/165d/xQzi5fIF82U.jpg',
+    [['01d'], 'http://cs633627.vk.me/v633627450/163f/fFK--dIxZlU.jpg'],
+    [['01n'], 'http://cs633627.vk.me/v633627450/162b/691NRSEyveI.jpg'],
+    [['02d'], 'http://cs633627.vk.me/v633627450/1653/S2h58MqOwR4.jpg'],
+    [['02n'], 'http://cs628729.vk.me/v628729450/22302/qjwznie_E_g.jpg'],
+    [['03d', '03n', '04d', '04n', '50d', '50n'],
+        'http://cs627917.vk.me/v627917450/372f9/MQO8vGSrGVI.jpg'],
+    [['10d', '10n'], 'http://cs633627.vk.me/v633627450/1617/-MKNWboCDdM.jpg'],
+    [['09d', '09n'], 'http://cs633627.vk.me/v633627450/1667/Sv-o4MoA2zk.jpg'],
+    [['13d', '13n'], 'http://cs633627.vk.me/v633627450/160d/M557s8Wc9Rw.jpg'],
+    [['11d', '11n'], 'http://cs633627.vk.me/v633627450/165d/xQzi5fIF82U.jpg'],
   ],
+  getUrl(code) {
+    return this.url.find(val => val[0].includes(code))[1];
+  },
 };
 
 const amdCfg = {
@@ -83,11 +82,12 @@ require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], ($, ko,
       cod: 200,
     };
     return Promise.resolve(
-      { city, country, temp, icon, speed, deg, measured: dt * 1000 });
+      { city, country, temp, icon, speed, deg, dt: dt * 1000 });
   }
 
   getWeatherData().then(data => {
-    weatherViewModel = new WeatherViewModel(data, assetsCfg);
+    weatherViewModel = new WeatherViewModel(
+        data, assets, ['dark', 'light', 'color']);
     ko.applyBindings(weatherViewModel);
   });
 });
