@@ -1,6 +1,7 @@
 // TODO Test background subscribtion
 // TODO Make icon changing
 // TODO Think about exeptions
+// TODO Save weather data and hiding state in cookies
 define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
     knockout, mapping, Cookie, { images: loader }, format
 ) => {
