@@ -1,5 +1,6 @@
 // TODO Test background subscribtion
 // TODO Make icon changing
+// TODO Think about exeptions
 define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
     knockout, mapping, Cookie, { images: loader }, format
 ) => {
@@ -82,7 +83,9 @@ define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
     wvm.nextUnitSystem = () => { changeOnPress('units'); };
     wvm.nextDateFormat = () => { changeOnPress('dateFormat'); };
     wvm.nextColorScheme = () => { changeOnPress('colors'); };
+    wvm.toggleVisibility = () => { wvm.isHidden(!wvm.isHidden()); };
 
+    wvm.isHidden = ko.observable(false);
     return wvm;
   };
 });

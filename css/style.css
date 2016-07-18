@@ -26,30 +26,40 @@ button:focus {
   position: absolute;
   left: 0;
   top: 0;
-  width: 580px;
   padding: 12px 40px 12px 40px;
-  box-sizing: border-box;
+}
+
+.weather-panel .logo {
+  position: relative;
+  padding: 0;
 }
 
 .weather-panel {
+  box-sizing: border-box;
+  width: 580px;
   height: 100%;
   z-index: 5;
+  transition: left 0.5s;
 }
 
-.logo, .logo-blank {
+.logo {
   text-align: left;
   font-family: 'Amita', cursive;
   font-weight: 700;
   font-size: 60px;
   margin: 0 0 -24px -3px;
-}
-
-.logo {
   z-index: 10;
+  cursor: pointer;
+  pointer-events: none;
+  transition: opacity 0.5s;
 }
 
-.logo-blank {
-  visibility: hidden;
+.logo:hover {
+  opacity: 1;
+}
+
+.out-of-view {
+  left: -580px;
 }
 
 .icon {
@@ -86,11 +96,20 @@ button:focus {
   font-weight: 100;
 }
 
-.active {
-  display: block;
+.muted {
+  opacity: 0.4;
+  pointer-events: auto;
 }
 
 .hidden {
+  visibility: hidden;
+}
+
+.enabled {
+  display: block;
+}
+
+.disabled {
   display: none;
 }
 
