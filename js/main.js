@@ -28,8 +28,8 @@ const amdCfg = {
   },
 };
 
-require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], (
-    $, ko, { OpenWeatherMap }, WeatherViewModel
+require(amdCfg, ['knockout', 'app/weather', 'app/viewmodel'], (
+    ko, { OpenWeatherMap }, WeatherViewModel
 ) => {
   const weatherService = new OpenWeatherMap(apiKey);
   let weatherViewModel = {};

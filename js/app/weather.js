@@ -1,6 +1,7 @@
 // TODO Apply singleton pattern
 // TODO Add Proxy pattern functionality
-define(['jquery'], $ => {
+// TODO Test JSON requesting
+define(() => {
   // Base class for work with weather API
   class Weather {
 
@@ -8,10 +9,18 @@ define(['jquery'], $ => {
       this.ipServiceUrl = ipServiceUrl;
     }
 
-    requestByUrl(url) {
+    requestByUrl(url, timeout = 10000) {
       return new Promise((resolve, reject) => {
-        $.getJSON(url, data => { resolve(data); })
-            .fail((j, status, error) => { reject(`${status}, ${error}`); });
+        const request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.timeout = timeout;
+        request.ontimeout = () => { reject('Connection timed out.'); };
+        request.onerror = () => { reject('Connection error.'); };
+        request.onload = () => {
+          if (+request.status === 200) resolve(JSON.parse(request.response));
+          else reject(request.status, `Request error: ${request.statusText}`);
+        };
+        request.send();
       });
     }
 
