@@ -4,7 +4,7 @@ define(() => {
   // Base class for work with weather API
   class Weather {
 
-    constructor(ipServiceUrl = 'http://ip-api.com/json') {
+    constructor(ipServiceUrl = '//ip-api.com/json') {
       this.ipServiceUrl = ipServiceUrl;
     }
 
@@ -48,7 +48,7 @@ define(() => {
   class OpenWeatherMap extends Weather {
 
     constructor(apiKey,
-        weatherServiceUrl = 'http://api.openweathermap.org/data/2.5/weather',
+        weatherServiceUrl = '//api.openweathermap.org/data/2.5/weather',
         ipServiceUrl
     ) {
       if (!apiKey) throw new Error('API key is required.');
