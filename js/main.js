@@ -1,4 +1,10 @@
+// TODO Make exeptions on server failure
+// TODO Refactor it later, also make separate config
+// TODO Refresh timings are unstable and untested
 const apiKey = '20e6b4bb024441f12fe889046e1acbd6';
+const dataPrefix = 'data-';
+const msPerDay = 86400000;
+const refresh = { key: 'serviceRefreshed', rate: 900000 };
 
 const assets = {
   url: [
@@ -28,66 +34,55 @@ const amdCfg = {
   },
 };
 
-require(amdCfg, ['jquery', 'knockout', 'app/weather', 'app/viewmodel'], (
-    $, ko, { OpenWeatherMap }, WeatherViewModel
+require(amdCfg, ['knockout', 'jscookie', 'app/weather', 'app/viewmodel'], (
+    ko, Cookies, { OpenWeatherMap }, WeatherViewModel
 ) => {
   const weatherService = new OpenWeatherMap(apiKey);
   let weatherViewModel = {};
 
   function getWeatherData() {
-    // weatherService.requestData().then...
-    const {
-      name: city, sys: { country }, dt, main: { temp },
-      weather: { 0: { icon } }, wind: { deg, speed },
-    } = {  // data;
-      coord: {
-        lon: 145.77,
-        lat: -16.92,
-      },
-      weather: [{
-        id: 803,
-        main: 'Clouds',
-        description: 'broken clouds',
-        icon: '01d',
-      }],
-      base: 'cmc stations',
-      main: {
-        temp: 321.55,
-        pressure: 1019,
-        humidity: 83,
-        temp_min: 289.82,
-        temp_max: 295.37,
-      },
-      wind: {
-        speed: 65.1,
-        deg: 150,
-      },
-      clouds: {
-        all: 75,
-      },
-      rain: {
-        '3h': 3,
-      },
-      dt: 1435658272,
-      sys: {
-        type: 1,
-        id: 8166,
-        message: 0.0166,
-        country: 'AU',
-        sunrise: 1435610796,
-        sunset: 1435650870,
-      },
-      id: 2172797,
-      name: 'Cairns',
-      cod: 200,
-    };
-    return Promise.resolve(
-      { city, country, temp, icon, speed, deg, dt: dt * 1000 });
+    function getFromService() {
+      console.log('from service');
+      return weatherService.requestData().then(data => {
+        const {
+          name: city, sys: { country }, dt, main: { temp },
+          weather: { 0: { icon } }, wind: { deg, speed },
+        } = data;
+        Cookies.set(refresh.key, Date.now(),
+            { expires: refresh.rate / msPerDay });
+        return { city, country, temp, icon, speed, deg, dt: dt * 1000 };
+      });
+    }
+
+    function getFromCookies() {
+      console.log('from cookie');
+      const cookie = Cookies.get();
+      const data = {};
+      Object.keys(cookie)
+          .filter(key => key.startsWith(dataPrefix))
+          .forEach(key => {
+            data[key.replace(dataPrefix, '')] = +cookie[key] || cookie[key];
+          });
+      return Promise.resolve(data);
+    }
+
+    return Cookies.get(refresh.key) ? getFromCookies() : getFromService();
+  }
+
+  function refreshData() {
+    getWeatherData().then(data => ko.mapping.fromJS(data, weatherViewModel));
   }
 
   getWeatherData().then(data => {
-    weatherViewModel = new WeatherViewModel(
-        data, assets, ['dark', 'light', 'color']);
+    weatherViewModel = new WeatherViewModel(data, assets,
+        ['dark', 'light', 'color']);
     ko.applyBindings(weatherViewModel);
   });
+
+  console.log(refresh.rate - (Date.now() - Cookies.get(refresh.key) || 0));
+
+  setTimeout(() => {
+    refreshData();
+    setInterval(() => { refreshData(); }, refresh.rate);
+  }, refresh.rate - (Date.now() - Cookies.get(refresh.key) || 0));
 });

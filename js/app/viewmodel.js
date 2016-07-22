@@ -1,8 +1,9 @@
 // TODO Test background subscribtion
 // TODO Make icon changing
 // TODO Think about exeptions
+// TODO Save weather data and hiding state in cookies
 define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
-    knockout, mapping, Cookie, { images: loader }, format
+    knockout, mapping, Cookies, { images: loader }, format
 ) => {
   const ko = knockout;
   ko.mapping = mapping;
@@ -21,33 +22,53 @@ define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
   };
 
   // View model constructor
-  return function WeatherViewModel(data, assets, colors,
+  return function WeatherViewModel(data, assets, colors = [],
+      cfg = { tempFractionLen: 1, numFixedLen: 2 },
       defaults = { units: 0, dateFormat: 0, colors: 0 },
-      cfg = { tempFractionLen: 1, numFixedLen: 2, cookieDays: 3 }
+      cookie = { lifeDays: 7, dataPrefix: 'data-' }
   ) {
-    if (colors) resources.colors = colors;
+    const mapData = Object.assign({ colors }, data, resources, cfg);
+    const mapCfg = {};
 
-    const wvm = ko.mapping.fromJS(Object.assign({}, data, cfg, resources), {
-      units: { create: options => options.data },
+    // Make mapping config
+    Object.keys(mapData).forEach(key => {
+      mapCfg[key] = {};
+      if (Array.isArray(mapData[key])) {
+        mapCfg[key].create = elem => elem.data;
+      }
+      if (data[key] !== undefined) {
+        mapCfg[key].update = elem => {
+          Cookies.set(`${cookie.dataPrefix}${key}`, elem.data,
+              { expires: cookie.lifeDays });
+          return elem.data;
+        };
+      }
     });
 
-    // Support functions
-    const scrollArray = name => { wvm[name].push(wvm[name].shift()); };
-    const changeOnPress = name => {
+    // Map data in new view model
+    const wvm = ko.mapping.fromJS(mapData, mapCfg);
+
+    // Define support functions
+    const scrollArray = name => {
+      wvm[name].push(wvm[name].shift());
+    };
+    const saveState = name => {
+      Cookies.set(name, mapData[name].findIndex(v => v === wvm[name]()[0]),
+          { expires: cookie.lifeDays });
+    };
+    const scrollAndSave = name => {
       scrollArray(name);
-      Cookie.set(name, resources[name].findIndex(v => v === wvm[name]()[0]),
-          { expires: cfg.cookieDays });
+      saveState(name);
     };
     const setBackground = () => {
-      loader.load(assets.getUrl(wvm.icon(), wvm.temp(), wvm.dt())).then(img => {
-        wvm.background(img.src);
-      });
+      loader.load(assets.getUrl(wvm.icon(), wvm.temp(), wvm.speed(), wvm.dt()))
+          .then(img => { wvm.background(img.src); });
     };
 
-    // Applying defaults
-    Object.keys(defaults).forEach(prop => {
-      for (let i = +Cookie.get(prop) || +defaults[prop] || 0; i--;) {
-        scrollArray(prop);
+    // Apply defaults
+    Object.keys(defaults).forEach(p => {
+      for (let i = Math.max(+defaults[p] || +Cookies.get(p) || 0, 0); i--;) {
+        scrollArray(p);
       }
     });
 
@@ -71,18 +92,18 @@ define(['knockout', 'mapping', 'jscookie', 'app/assets', 'app/format'], (
         wvm.speedMod().toFixed(wvm.tempFractionLen())));
     wvm.cardinal = ko.computed(() => format.cardinalDir(wvm.deg()));
 
-    // Visuals
+    // Define visuals
     wvm.background = ko.observable('');
-    if (wvm.colors) wvm.colorScheme = ko.computed(() => wvm.colors()[0]);
+    wvm.colorScheme = ko.computed(() => wvm.colors()[0]);
     if (assets) {
       wvm.icon.subscribe(setBackground);
       setBackground();
     }
 
-    // Buttons
-    wvm.nextUnitSystem = () => { changeOnPress('units'); };
-    wvm.nextDateFormat = () => { changeOnPress('dateFormat'); };
-    wvm.nextColorScheme = () => { changeOnPress('colors'); };
+    // Define buttons
+    wvm.nextUnitSystem = () => { scrollAndSave('units'); };
+    wvm.nextDateFormat = () => { scrollAndSave('dateFormat'); };
+    wvm.nextColorScheme = () => { scrollAndSave('colors'); };
     wvm.toggleVisibility = () => { wvm.isHidden(!wvm.isHidden()); };
 
     wvm.isHidden = ko.observable(false);
