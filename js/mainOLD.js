@@ -18,20 +18,3 @@ function setWeatherIcon(code) {
     default: break;
   }
 }
-
-function showInfo() {
-  $('#info, .back-grad').removeClass('empty');
-  $('#wait').addClass('empty');
-  setTimeout(function() {
-    $('#back-img').removeClass('empty');
-  }, 500);
-}
-
-$(document).ready(function() {
-  var refreshSpeed = 720000;
-
-  refreshWeather();
-  var getInfo = setInterval(function() {
-    refreshWeather();
-  }, refreshSpeed);
-});

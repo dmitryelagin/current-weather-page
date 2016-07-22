@@ -36,7 +36,7 @@ button:focus {
 
 .weather-panel {
   box-sizing: border-box;
-  width: 580px;
+  width: 600px;
   height: 100%;
   z-index: 5;
   transition: left 0.5s;
@@ -59,7 +59,7 @@ button:focus {
 }
 
 .out-of-view {
-  left: -580px;
+  left: -600px;
 }
 
 .icon {
@@ -73,26 +73,30 @@ button:focus {
 }
 
 .data-row > * {
-  margin-right: 48px;
+  margin-right: 54px;
 }
 
 .data-row :last-child {
   margin-right: 0;
 }
 
-.medium {
-  font-size: 24px;
+.text-medium {
+  font-size: 20px;
 }
 
-.tall {
+.text-high {
+  font-size: 32px;
+}
+
+.text-tall {
   font-size: 80px;
 }
 
-.tallest {
-  font-size: 200px;
+.text-tallest {
+  font-size: 208px;
 }
 
-.thin {
+.text-thin {
   font-weight: 100;
 }
 

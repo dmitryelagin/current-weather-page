@@ -1,6 +1,5 @@
-// TODO Apply singleton pattern
-// TODO Add Proxy pattern functionality
 // TODO Test JSON requesting
+// TODO Weather should not be the only one constructor
 define(() => {
   // Base class for work with weather API
   class Weather {
@@ -18,7 +17,7 @@ define(() => {
         request.onerror = () => { reject('Connection error.'); };
         request.onload = () => {
           if (+request.status === 200) resolve(JSON.parse(request.response));
-          else reject(request.status, `Request error: ${request.statusText}`);
+          else reject(`Error ${request.status}: ${request.statusText}`);
         };
         request.send();
       });
