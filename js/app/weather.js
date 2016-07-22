@@ -1,10 +1,13 @@
-// TODO Test JSON requesting
+// TODO Test promises on fails
 // TODO Weather should not be the only one constructor
 define(() => {
   // Base class for work with weather API
   class Weather {
 
-    constructor(ipServiceUrl = '//freegeoip.net/json') {
+    constructor(ipGeoServiceUrl = '//freegeoip.net/json/',
+        ipServiceUrl = '//api.ipify.org'
+    ) {
+      this.ipGeoServiceUrl = ipGeoServiceUrl;
       this.ipServiceUrl = ipServiceUrl;
     }
 
@@ -16,7 +19,7 @@ define(() => {
         request.ontimeout = () => { reject('Connection timed out.'); };
         request.onerror = () => { reject('Connection error.'); };
         request.onload = () => {
-          if (+request.status === 200) resolve(JSON.parse(request.response));
+          if (+request.status === 200) resolve(request.response);
           else reject(`Error ${request.status}: ${request.statusText}`);
         };
         request.send();
@@ -36,10 +39,9 @@ define(() => {
     }
 
     locate() {
-      return this.requestByUrl(this.ipServiceUrl).then(data => {
-        if (data.message) throw data.message;
-        return { zip: data.zip_code, countryCode: data.country_code };
-      });
+      return this.requestByUrl(this.ipServiceUrl)
+          .then(ip => this.requestByUrl(`${this.ipGeoServiceUrl}${ip}`))
+          .then(data => JSON.parse(data));
     }
 
   }
@@ -49,10 +51,10 @@ define(() => {
 
     constructor(apiKey,
         weatherServiceUrl = '//api.openweathermap.org/data/2.5/weather',
-        ipServiceUrl
+        ...ipServices
     ) {
       if (!apiKey) throw new Error('API key is required.');
-      super(ipServiceUrl);
+      super(...ipServices);
       this.weatherServiceUrl = weatherServiceUrl;
       this.key = apiKey;
     }
@@ -62,15 +64,11 @@ define(() => {
           `lat=${latitude}&lon=${longitude}&appid=${this.key}`;
     }
 
-    makeRequestUrlByLocation({ zip, countryCode }) {
-      return `${this.weatherServiceUrl}?` +
-          `zip=${zip},${countryCode}&appid=${this.key}`;
-    }
-
     requestData() {
       return this.coordinate().then(data => this.makeRequestUrlByCoords(data),
-          () => this.locate().then(data => this.makeRequestUrlByLocation(data)))
-          .then(url => this.requestByUrl(url));
+          () => this.locate().then(data => this.makeRequestUrlByCoords(data)))
+          .then(url => this.requestByUrl(url))
+          .then(data => JSON.parse(data));
     }
 
   }
