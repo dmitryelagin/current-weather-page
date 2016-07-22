@@ -4,7 +4,7 @@ define(() => {
   // Base class for work with weather API
   class Weather {
 
-    constructor(ipServiceUrl = '//ip-api.com/json') {
+    constructor(ipServiceUrl = '//freegeoip.net/json') {
       this.ipServiceUrl = ipServiceUrl;
     }
 
@@ -38,7 +38,7 @@ define(() => {
     locate() {
       return this.requestByUrl(this.ipServiceUrl).then(data => {
         if (data.message) throw data.message;
-        return { zip: data.zip, countryCode: data.countryCode };
+        return { zip: data.zip_code, countryCode: data.country_code };
       });
     }
 
