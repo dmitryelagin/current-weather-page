@@ -1,5 +1,3 @@
-// TODO Test promises on fails
-// TODO Weather should not be the only one constructor
 define(() => {
   // Base class for work with weather API
   class Weather {
@@ -16,11 +14,11 @@ define(() => {
         const request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.timeout = timeout;
-        request.ontimeout = () => { reject('Connection timed out.'); };
-        request.onerror = () => { reject('Connection error.'); };
+        request.ontimeout = () => { reject(`Connection timed out: ${url}`); };
+        request.onerror = () => { reject(`Connection error: ${url}`); };
         request.onload = () => {
           if (+request.status === 200) resolve(request.response);
-          else reject(`Error ${request.status}: ${request.statusText}`);
+          else reject(`Error ${request.status}: ${request.statusText}; ${url}`);
         };
         request.send();
       });
@@ -31,7 +29,7 @@ define(() => {
         if ('geolocation' in navigator) {
           navigator.geolocation.getCurrentPosition(
               position => { resolve(position.coords); },
-              () => { reject('Can not access geolocation.'); });
+              () => { reject('Can not access browser geolocation.'); });
         } else {
           reject('Browser has no geolocation.');
         }
