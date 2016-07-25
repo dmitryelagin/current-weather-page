@@ -1,25 +1,38 @@
-// TODO Make change load method to get to return request from pool if loaded
+// TODO Test all methods
 define(() => {
   // Assets storage class
   class Storage {
 
     constructor(loader) {
       this.loader = loader;
-      this.pool = [];
+      this.assets = new Map();
     }
 
-    load(links, retries = 2, delay = 200) {
-      function loadAsset(url, i, a, attempts = retries, wait = 0) {
+    get pool() {
+      const pool = [];
+      this.assets.forEach(asset => pool.push(asset));
+      return pool;
+    }
+
+    get(links, retries = 2, delay = 200) {
+      function downloadAsset(url, attempts = retries, wait = 0) {
         return new Promise(fn => setTimeout(fn, wait)).then(() => (
           this.loader(url).catch(error => (attempts
-            ? loadAsset.call(this, url, i, a, attempts - 1, delay)
+            ? downloadAsset.call(this, url, attempts - 1, delay)
             : new Error(`Asset was not loaded: ${error}`)))));
       }
 
+      function getAsset(url) {
+        const asset = this.assets.get(url);
+        return asset === undefined || asset instanceof Error
+          ? downloadAsset.call(this, url)
+              .then(loaded => this.assets.set(url, loaded).get(url))
+          : Promise.resolve(asset);
+      }
+
       return new Promise((resolve, reject) => {
-        Promise.all([].concat(links).map(loadAsset, this)).then(results => {
-          this.pool.push(...results);
-          if (results.some(e => e instanceof Error)) reject(...results);
+        Promise.all([].concat(links).map(getAsset, this)).then(results => {
+          if (results.some(el => el instanceof Error)) reject(...results);
           else resolve(...results);
         });
       });

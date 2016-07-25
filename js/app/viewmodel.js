@@ -63,7 +63,7 @@ define(['knockout', 'mapping', 'jscookie',
     // Load and set image to background
     wvm.background = ko.observable('');
     ko.computed(() => {
-      loader.load(asset.pic.get(wvm.icon(), wvm.temp(), wvm.speed(), wvm.dt()))
+      loader.get(asset.pic.get(wvm.icon(), wvm.temp(), wvm.speed(), wvm.dt()))
           .then(img => { wvm.background(img.src); })
           .catch(() => { wvm.background(''); });
     }).extend({ deferred: true });
