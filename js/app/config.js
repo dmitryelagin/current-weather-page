@@ -1,4 +1,4 @@
-// TODO Think about assets IDs
+// TODO Relink images
 define({
   MS_PER_DAY: 86400000,
 

@@ -1,5 +1,6 @@
+// TODO Make change load method to get to return request from pool if loaded
 define(() => {
-  // Game assets storage class
+  // Assets storage class
   class Storage {
 
     constructor(loader) {
