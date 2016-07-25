@@ -6,6 +6,7 @@ define(() => {
     constructor(loader) {
       this.loader = loader;
       this.assets = new Map();
+      this.default = { retries: 2, delay: 200 };
     }
 
     get pool() {
@@ -14,7 +15,7 @@ define(() => {
       return pool;
     }
 
-    get(links, retries = 2, delay = 200) {
+    get(links, { retries, delay } = this.default) {
       function downloadAsset(url, attempts = retries, wait = 0) {
         return new Promise(fn => setTimeout(fn, wait)).then(() => (
           this.loader(url).catch(error => (attempts
@@ -36,6 +37,11 @@ define(() => {
           else resolve(...results);
         });
       });
+    }
+
+    config(options) {
+      Object.assign(this.default, options);
+      return this;
     }
 
   }
