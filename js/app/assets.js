@@ -26,12 +26,12 @@ define(() => {
         const asset = this.assets.get(url);
         return asset === undefined || asset instanceof Error
           ? downloadAsset.call(this, url)
-              .then(loaded => this.assets.set(url, loaded).get(url))
           : Promise.resolve(asset);
       }
 
       return new Promise((resolve, reject) => {
         Promise.all([].concat(links).map(getAsset, this)).then(results => {
+          results.forEach((val, id) => { this.assets.set(links[id], val); });
           if (results.some(el => el instanceof Error)) reject(...results);
           else resolve(...results);
         });
