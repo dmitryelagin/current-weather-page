@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- TODO Add massive transitions -->
+<!-- TODO Add color, background and icon transitions -->
 <!-- TODO Add waiting animation -->
 
 <html lang="en">
@@ -18,15 +18,15 @@
   <h1 class="logo muted" data-bind="click: toggleVisibility, css: { muted: isHidden }">Now the weather</h1>
   <div class="weather-panel out-of-view" data-bind="css: { 'out-of-view': isHidden }">
     <h1 class="logo hidden">0</h1>
-    <p class="text-medium">in <span data-bind="text: city">City</span>, <span data-bind="text: country">C</span>; at <span data-bind="text: date">00:00, 01.01.1970</span></p>
-    <p class="text-tall"><span class="text-tallest"><span data-bind="text: tempSign" class="text-thin">+</span><span data-bind="text: tempInt">1</span></span><span data-bind="text: tempFract">.0</span>°<span data-bind="text: tempUnit">C</span></p>
+    <p class="text-medium">in <span data-bind="textTransition: city">City</span>, <span data-bind="textTransition: country">C</span>; at <span data-bind="textTransition: date">00:00, 01.01.1970</span></p>
+    <p class="text-tall"><span class="text-tallest"><span data-bind="textTransition: tempSign" class="text-thin">+</span><span data-bind="textTransition: tempInt">1</span></span><span data-bind="textTransition: tempFract">.0</span>°<span data-bind="textTransition: tempUnit">C</span></p>
     <div class="data-row">
       <svg class="icon" viewbox="0 0 512 512">
         <use xlink:href="" data-bind="attr: { 'xlink:href': 'img/icons.svg#' + iconID() }"></use>
       </svg>
       <div>
-        <p class="text-tall" data-bind="text: cardinalDir">N</p>
-        <p class="text-tall"><span class="text-thin" data-bind="text: speedVal">0.0</span><span class="text-high"> <span data-bind="text: speedUnit">m/s</span></span></p>
+        <p class="text-tall" data-bind="textTransition: cardinalDir">N</p>
+        <p class="text-tall"><span class="text-thin" data-bind="textTransition: speedVal">0.0</span><span class="text-high"> <span data-bind="textTransition: speedUnit">m/s</span></span></p>
       </div>
     </div>
     <br><br>

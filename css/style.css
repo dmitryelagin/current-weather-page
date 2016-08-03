@@ -129,9 +129,7 @@ button:focus {
   position: fixed;
   z-index: 0;
   opacity: 0;
-  transition:
-    background-image 2s ease-in-out,
-    opacity 2s;
+  transition: opacity 2s;
 }
 
 .background[style] {

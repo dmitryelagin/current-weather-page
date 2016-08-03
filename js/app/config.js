@@ -7,6 +7,11 @@ define({
     refreshRate: '900000',
   },
 
+  text: {
+    transitionSpeed: 500,
+    opacity: 1,
+  },
+
   cookie: {
     dataPrefix: 'data-',
     lifeDays: 7,

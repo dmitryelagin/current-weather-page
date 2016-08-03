@@ -6,15 +6,18 @@ const amd = {
 };
 const deps = [
   'knockout', 'mapping', 'jscookie',
-  'app/config', 'app/weather', 'app/viewmodel',
+  'app/config',
+  'app/bindings', 'app/weather', 'app/viewmodel',
 ];
 
 require(amd, deps, (
     knockout, mapping, Cookies,
-    { API, cookie, MS_PER_DAY }, { OpenWeatherMap }, WeatherViewModel
+    { API, cookie, MS_PER_DAY, text: { transitionSpeed, opacity } },
+    { textTransition }, { OpenWeatherMap }, WeatherViewModel
 ) => {
   const ko = knockout;
   ko.mapping = mapping;
+  ko.bindingHandlers.textTransition = textTransition(transitionSpeed, opacity);
 
   const weatherService = new OpenWeatherMap(API.key);
   let weatherViewModel = {};
