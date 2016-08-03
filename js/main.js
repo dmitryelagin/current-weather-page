@@ -20,8 +20,7 @@ require(amd, deps, (
   let weatherViewModel = {};
 
   function getWeatherData() {
-    function getFromService() {
-      console.log('from service');
+    function fromService() {
       return weatherService.requestData().then(data => {
         const {
           name: city, sys: { country }, dt, main: { temp },
@@ -33,8 +32,7 @@ require(amd, deps, (
       });
     }
 
-    function getFromCookies() {
-      console.log('from cookie');
+    function fromCookies() {
       const cks = Cookies.get();
       const data = {};
       Object.keys(cks)
@@ -45,7 +43,7 @@ require(amd, deps, (
       return Promise.resolve(data);
     }
 
-    return Cookies.get(cookie.key.refresh) ? getFromCookies() : getFromService();
+    return Cookies.get(cookie.key.refresh) ? fromCookies() : fromService();
   }
 
   function refreshData() {

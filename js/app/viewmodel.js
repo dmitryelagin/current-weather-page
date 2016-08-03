@@ -1,4 +1,3 @@
-// TODO Make icon changing
 define(['knockout', 'mapping', 'jscookie',
         'app/config', 'app/assets', 'app/format'], (
         knockout, mapping, Cookies,
@@ -56,6 +55,7 @@ define(['knockout', 'mapping', 'jscookie',
 
     // Make miscellaneous computed values
     wvm.colorScheme = ko.computed(() => wvm.colors()[0]);
+    wvm.iconID = ko.computed(() => asset.icon.get(wvm.icon()));
     wvm.cardinalDir = ko.computed(() => format.cardinalDir(wvm.deg()));
     wvm.date = ko.computed(() => (
         format.date(new Date(wvm.dt()), wvm.dateFormat()[0])));

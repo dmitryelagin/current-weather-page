@@ -48,7 +48,7 @@ define(() => {
 
   // Storages
   const images = new Storage(url => new Promise((resolve, reject) => {
-    const img = new Image();
+    const img = document.createElement('img');
     img.onload = () => { resolve(img); };
     img.onerror = () => { reject(url); };
     img.src = url;

@@ -128,6 +128,14 @@ button:focus {
   height: calc(100% + 2px);
   position: fixed;
   z-index: 0;
+  opacity: 0;
+  transition:
+    background-image 2s ease-in-out,
+    opacity 2s;
+}
+
+.background[style] {
+  opacity: 100;
 }
 
 /* Dark scheme */
