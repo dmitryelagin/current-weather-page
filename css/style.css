@@ -1,292 +1,124 @@
 body {
-  background-color: #555;
-}
-
-p, a, h1 {
-  transition: color 0.3s linear;
-}
-
-h1, p {
-  color: #000;
-}
-
-p {
+  background-color: #888;
+  text-align: left;
   font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
 }
 
-a, a:focus {
-  color: #222;
-  text-decoration: underline;
+h1, a, p {
+  margin: 0;
 }
 
-a:hover {
-  transition: none;
-  color: #444;
+button {
+  background: none;
+  border: 2px solid;
+  border-radius: 100px;
+  padding: 10px 20px 12px 20px;
+  cursor: pointer;
 }
 
-a:active {
-  transition: none;
-  color: #666;
+button:focus {
+  outline: 0;
 }
 
-.main, .back-grad {
-  width: 480px;
-  transition:
-    left 0.3s ease,
-    opacity 0.3s linear,
-    background-color 0.3s linear;
-}
-
-.main {
+.weather-panel, .logo {
   position: absolute;
   left: 0;
-  z-index: 100;
-  padding: 40px;
-}
-
-.back-grad {
-  position: fixed;
-  z-index: 50;
-  left: 0;
   top: 0;
-  height: 100%;
-  opacity: 0.6;
-  background-color: #fff;
+  padding: 12px 40px 12px 40px;
 }
 
-.separator {
-  width: 100%;
-  height: 2px;
-  background-color: #000;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  transition: background-color 0.3s linear;
+.weather-panel .logo {
+  position: relative;
+  padding: 0;
+}
+
+.weather-panel {
+  box-sizing: border-box;
+  width: 600px;
+  height: 100%;
+  z-index: 5;
+  transition: left 0.5s;
 }
 
 .logo {
-  font-family: 'Amita', cursive;
-  font-size: 54px;
-  color: #f66;
-  margin: -8px -12px 4px -12px;
-  text-align: center;
-}
-
-#info {
-  transition: opacity 0.3s linear;
-}
-
-.where, .when, .wait {
-  font-size: 18px;
-  margin: 0;
-}
-
-.wait {
-  position: absolute;
-  transition: opacity 0.3s linear;
-}
-
-.where {
-  font-size: 18px;
   text-align: left;
+  font-family: 'Amita', cursive;
+  font-weight: 700;
+  font-size: 60px;
+  margin: 0 0 -24px -3px;
+  z-index: 10;
+  cursor: pointer;
+  pointer-events: none;
+  transition: opacity 0.5s;
 }
 
-.when {
-  text-align: right;
+.logo:hover {
+  opacity: 1;
 }
 
-.temperature {
-  margin-top: -14px;
-  font-weight: 100;
-  font-size: 200px;
-  line-height: 200px;
-  text-align: right;
-}
-
-.temperature .numbers {
-  font-weight: 300;
-}
-
-.temperature .numbers.decimal {
-  font-weight: 400;
-  font-size: 108px;
-}
-
-.temperature .degree {
-  font-weight: 300;
-  font-size: 90px;
-  margin: 0 0 0 -68px;
-}
-
-.additional {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-}
-
-.additional.big {
-  margin-top: -36px;
-  margin-bottom: 30px;
+.out-of-view {
+  left: -600px;
 }
 
 .icon {
-  text-align: left;
-  fill: #000;
-  width: 160px;
-  height: 160px;
-  transition: fill 0.3s linear;
+  width: 200px;
+  height: 200px;
+}
+
+.data-row {
+  display: flex;
+  width: 100%;
+}
+
+.data-row > * {
+  margin-right: 54px;
+}
+
+.data-row :last-child {
+  margin-right: 0;
+}
+
+.text-medium {
+  font-size: 20px;
+}
+
+.text-high {
+  font-size: 32px;
+}
+
+.text-tall {
+  font-size: 80px;
+}
+
+.text-tallest {
+  font-size: 208px;
+}
+
+.text-thin {
+  font-weight: 100;
+}
+
+.muted {
+  opacity: 0.4;
+  pointer-events: auto;
 }
 
 .hidden {
+  visibility: hidden;
+}
+
+.enabled {
+  display: block;
+}
+
+.disabled {
   display: none;
 }
 
-.wind {
-  text-align: right;
-  font-weight: 300;
-  padding-top: 20px;
-  line-height: 60px;
-  font-size: 50px;
-  margin: -4px 0 0 0;
-}
-
-.direction {
-  font-size: 110px;
-  line-height: 70px;
-}
-
-.button {
-  font-size: 16px;
-  border: 3px solid #000;
-  border-radius: 100px;
-  margin: 24px 0 0 0;
-  padding: 8px 16px 8px 16px;
-  cursor: pointer;
-  transition:
-    color 0.3s linear,
-    background-color 0.3s linear,
-    border-color  0.3s linear;
-  /* Buttons will not selected */
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  /* End */
-}
-
-.button:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.button:active {
-  transition: none;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.left {
-  float: left;
-}
-
-.right {
-  float: right;
-}
-
-.about {
-  font-size: 14px;
-  margin: 0;
-}
-
-.empty {
-  opacity: 0;
-  pointer-events: none;
-  position: fixed;
-}
-
-.slideOut {
-  left: -480px;
-}
-
-/* Dark styles */
-.dark p {
-  color: #fff;
-}
-
-.dark a, .dark a:focus {
-  color: #ddd;
-}
-
-.dark svg {
-  fill: #fff;
-}
-
-.dark .separator {
-  background-color: #fff;
-}
-
-.dark .button {
-  border-color: #fff;
-  background-color: rgba(255, 255, 255, 0);
-}
-
-.dark .button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.dark .button:active {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.dark.main + .back-grad {
-  background-color: #000;
-}
-
-.dark a:hover {
-  color: #bbb;
-}
-
-.dark a:active {
-  color: #999;
-}
-
-/* Loading animation */
-@keyframes loading {
-  0% {
-    opacity: 0;
-  }
-  49% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.wait span {
-    animation-name: loading;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
-    animation-fill-mode: both;
-}
-
-.wait span:nth-child(2) {
-    animation-delay: 0.25s;
-}
-
-.wait span:nth-child(3) {
-    animation-delay: 0.5s;
-}
-
-.wait span:nth-child(4) {
-    animation-delay: 0.75s;
-}
-
-/* Backgrounds */
-#back-img {
-  background-size: cover;     
+.background {
+  background-size: cover;
   background-attachment: fixed;
   background-position: center;
   cursor: pointer;
@@ -295,43 +127,115 @@ a:active {
   width: calc(100% + 2px);
   height: calc(100% + 2px);
   position: fixed;
+  z-index: 0;
+  opacity: 0;
   transition:
-    background-image 0.3s linear,
-    opacity 0.3s linear;
+    background-image 2s ease-in-out,
+    opacity 2s;
 }
 
-.clear-day {
-  background-image: url(http://cs633627.vk.me/v633627450/163f/fFK--dIxZlU.jpg);
+.background[style] {
+  opacity: 100;
 }
 
-.clear-night {
-  background-image: url(http://cs633627.vk.me/v633627450/162b/691NRSEyveI.jpg);
+/* Dark scheme */
+.dark .weather-panel {
+  color: #fff;
+  fill: #fff;
+  background-color: #333;
+  background-color: rgba(30, 30, 30, 0.8);
+  background: linear-gradient(to bottom,
+    rgba(30, 30, 30, 0.8) 840px,
+    transparent 1080px);
 }
 
-.cloudy-day {
-  background-image: url(http://cs633627.vk.me/v633627450/1653/S2h58MqOwR4.jpg);
+.dark .secondary {
+  color: #bbb;
 }
 
-.cloudy-night {
-  background-image: url(http://cs628729.vk.me/v628729450/22302/qjwznie_E_g.jpg);
+.dark button {
+  color: #fff;
+  border-color: #fff;
 }
 
-.overcast {
-  background-image: url(http://cs627917.vk.me/v627917450/372f9/MQO8vGSrGVI.jpg);
+.dark button:focus {
+  background-color: #444;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.storm {
-  background-image: url(http://cs633627.vk.me/v633627450/1617/-MKNWboCDdM.jpg);
+.dark button:hover {
+  background-color: #555;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-.precipitation {
-  background-image: url(http://cs633627.vk.me/v633627450/1667/Sv-o4MoA2zk.jpg);
+.dark .logo, .dark a {
+  color: #f66;
 }
 
-.heavy-rain {
-  background-image: url(http://cs633627.vk.me/v633627450/160d/M557s8Wc9Rw.jpg);
+/* Light scheme */
+.light .weather-panel {
+  color: #000;
+  fill: #000;
+  background-color: #ddd;
+  background-color: rgba(230, 230, 230, 0.7);
+  background: linear-gradient(to bottom,
+    rgba(230, 230, 230, 0.7) 840px,
+    transparent 1080px);
 }
 
-.heavy-snow {
-  background-image: url(http://cs633627.vk.me/v633627450/165d/xQzi5fIF82U.jpg);
+.light .secondary {
+  color: #555;
+}
+
+.light button {
+  color: #000;
+  border-color: #000;
+}
+
+.light button:focus {
+  background-color: #ccc;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.light button:hover {
+  background-color: #bbb;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.light .logo, .light a {
+  color: #d44;
+}
+
+/* Color scheme */
+.color .weather-panel {
+  color: #fb4;
+  fill: #fb4;
+  background-color: #422;
+  background-color: rgba(40, 20, 60, 0.8);
+  background: linear-gradient(to bottom,
+    rgba(40, 20, 60, 0.8) 840px,
+    transparent 1080px);
+}
+
+.color .secondary {
+  color: #a86;
+}
+
+.color button {
+  color: #fa4;
+  border-color: #fa4;
+}
+
+.color button:focus {
+  background-color: #533;
+  background-color: rgba(255, 220, 60, 0.1);
+}
+
+.color button:hover {
+  background-color: #644;
+  background-color: rgba(255, 220, 60, 0.2);
+}
+
+.color .logo, .color a {
+  color: #2e6;
 }
