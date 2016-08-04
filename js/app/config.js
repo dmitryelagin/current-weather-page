@@ -8,7 +8,7 @@ define({
   },
 
   text: {
-    transitionSpeed: 500,
+    transitionSpeed: 300,
     opacity: 1,
   },
 

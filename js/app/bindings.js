@@ -1,5 +1,5 @@
 define(['jquery', 'knockout'], ($, ko) => ({
-  textTransition(speed, baseOpacity) {
+  textTransition(speed = 300, baseOpacity) {
     return {
       init() {
         return { controlsDescendantBindings: true };
