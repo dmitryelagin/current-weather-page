@@ -13,11 +13,11 @@ const deps = [
 require(amd, deps, (
     knockout, mapping, Cookies,
     { API, cookie, MS_PER_DAY, text: { transitionSpeed, opacity } },
-    { textTransition }, { OpenWeatherMap }, WeatherViewModel
+    bindings, { OpenWeatherMap }, WeatherViewModel
 ) => {
   const ko = knockout;
   ko.mapping = mapping;
-  ko.bindingHandlers.textTransition = textTransition(transitionSpeed, opacity);
+  Object.assign(ko.bindingHandlers, bindings.fading(transitionSpeed, opacity));
 
   const weatherService = new OpenWeatherMap(API.key);
   let weatherViewModel = {};
