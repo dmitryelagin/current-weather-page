@@ -1,10 +1,14 @@
 define(() => {
+  const service = {
+    weather: '//api.openweathermap.org/data/2.5/weather',
+    ipGeo: '//freegeoip.net/json/',
+    ip: '//api.ipify.org',
+  };
+
   // Base class for work with weather API
   class Weather {
 
-    constructor(ipGeoServiceUrl = '//freegeoip.net/json/',
-        ipServiceUrl = '//api.ipify.org'
-    ) {
+    constructor(ipGeoServiceUrl = service.ipGeo, ipServiceUrl = service.ip) {
       this.ipGeoServiceUrl = ipGeoServiceUrl;
       this.ipServiceUrl = ipServiceUrl;
     }
@@ -47,10 +51,7 @@ define(() => {
   // Class for openweathermap.org
   class OpenWeatherMap extends Weather {
 
-    constructor(apiKey,
-        weatherServiceUrl = '//api.openweathermap.org/data/2.5/weather',
-        ...ipServices
-    ) {
+    constructor(apiKey, weatherServiceUrl = service.weather, ...ipServices) {
       if (!apiKey) throw new Error('API key is required.');
       super(...ipServices);
       this.weatherServiceUrl = weatherServiceUrl;
