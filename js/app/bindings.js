@@ -7,7 +7,7 @@ define(['jquery', 'knockout'], ($, ko) => ({
       update(element, ...args) {
         const $element = $(element);
         const opacity = $element.css('opacity');
-        const $el = $element.clone()
+        $element.clone()
             .css({
               opacity,
               position: 'absolute',
@@ -17,7 +17,9 @@ define(['jquery', 'knockout'], ($, ko) => ({
               height: `${$element.height()}px`,
             })
             .insertBefore($element)
-            .animate({ opacity: 0 }, speed, 'swing', () => { $el.remove(); });
+            .animate({ opacity: 0 }, speed, 'swing', function removeElement() {
+              $(this).remove();
+            });
         $element.stop().css({ opacity: 0 });
         bindingHandler.update(element, ...args);
         $element.animate({ opacity: baseOpacity || opacity }, speed, 'swing');
