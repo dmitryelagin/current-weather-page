@@ -7,9 +7,9 @@ define({
     refreshRate: '900000',
   },
 
-  text: {
-    transitionSpeed: 300,
-    opacity: 1,
+  misc: {
+    transitionSpeed: { fast: 300, slow: 2000 },
+    baseOpacity: 1,
   },
 
   cookie: {

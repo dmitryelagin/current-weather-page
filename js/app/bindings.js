@@ -1,8 +1,10 @@
-define(['jquery', 'knockout'], ($, ko) => {
-  function makeFadingBinding(bindingHandler, speed = 300, baseOpacity) {
+define(['jquery', 'knockout'], ($, ko) => ({
+  // Existing bindings modifiers
+  Fading: function FadingBinding(binding, speed = 300, baseOpacity) {
+    const bindingHandler = ko.bindingHandlers[binding] || binding;
     return {
       init: bindingHandler.init,
-      update(element, valueAccessor, ...args) {
+      update(element, ...args) {
         const $element = $(element);
         const opacity = $element.css('opacity');
         const $el = $element.clone()
@@ -17,18 +19,9 @@ define(['jquery', 'knockout'], ($, ko) => {
             .insertBefore($element)
             .animate({ opacity: 0 }, speed, 'swing', () => { $el.remove(); });
         $element.stop().css({ opacity: 0 });
-        bindingHandler.update(element, valueAccessor, ...args);
+        bindingHandler.update(element, ...args);
         $element.animate({ opacity: baseOpacity || opacity }, speed, 'swing');
       },
     };
-  }
-
-  return {
-    fading(...cfg) {
-      return {
-        textFading: makeFadingBinding(ko.bindingHandlers.text, ...cfg),
-        attrFading: makeFadingBinding(ko.bindingHandlers.attr, ...cfg),
-      };
-    },
-  };
-});
+  },
+}));

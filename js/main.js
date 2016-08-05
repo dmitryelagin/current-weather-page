@@ -5,19 +5,22 @@ const amd = {
   paths: { app: '../app' },
 };
 const deps = [
-  'knockout', 'mapping', 'jscookie',
+  'jquery', 'knockout', 'mapping', 'jscookie',
   'app/config',
   'app/bindings', 'app/weather', 'app/viewmodel',
 ];
 
 require(amd, deps, (
-    knockout, mapping, Cookies,
-    { API, cookie, MS_PER_DAY, text: { transitionSpeed, opacity } },
+    $, knockout, mapping, Cookies,
+    { API, cookie, MS_PER_DAY, misc: { transitionSpeed, baseOpacity } },
     bindings, { OpenWeatherMap }, WeatherViewModel
 ) => {
   const ko = knockout;
   ko.mapping = mapping;
-  Object.assign(ko.bindingHandlers, bindings.fading(transitionSpeed, opacity));
+  Object.assign(ko.bindingHandlers, {
+    textFading: new bindings.Fading('text', transitionSpeed.fast, baseOpacity),
+    attrFading: new bindings.Fading('attr', transitionSpeed.fast, baseOpacity),
+  });
 
   const weatherService = new OpenWeatherMap(API.key);
   let weatherViewModel = {};
@@ -58,7 +61,11 @@ require(amd, deps, (
     ko.applyBindings(weatherViewModel);
   });
 
+  // Added for testing
+  $('.icon').on('click', () => { weatherViewModel.icon('01d'); });
   console.log(API.refreshRate - (Date.now() - Cookies.get(cookie.key.refresh) || 0));
+  // Delete after finish
+  // Also delete JQuery dependency from this file
 
   setTimeout(() => {
     refreshData();
